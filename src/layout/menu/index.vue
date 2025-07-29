@@ -1,36 +1,38 @@
 <template>
   <template v-for="(item, index) in menuList" :key="item.path">
-    <template v-if="!item.children">
-      <el-menu-item v-if="!item.meta.hidden" :index="item.path" @click="goRoute">
-        <el-icon>
-          <component :is="item.meta.icon"/>
-        </el-icon>
-        <template #title>
-          <span>{{ item.meta.title }}</span>
-        </template>
-      </el-menu-item>
-    </template>
+    <!-- 是否菜单 -->
+    <template v-if="item.meta.isMenu">
+      <template v-if="!item.meta.hidden">
+        <template v-if="item.children">
+          <!-- 有子节点，表示目录 -->
+          <el-sub-menu :index="item.path">
+            <template #title>
+              <el-icon>
+                <component :is="item.meta.icon"/>
+              </el-icon>
+              <span>{{ item.meta.title }}</span>
+            </template>
 
-    <template v-if="item.children && item.children.length == 1">
-      <el-menu-item v-if="!item.children[0].meta.hidden" :index="item.children[0].path" @click="goRoute">
-        <el-icon>
-          <component :is="item.children[0].meta.icon"/>
-        </el-icon>
-        <template #title>
-          <span>{{ item.children[0].meta.title }}</span>
+            <!-- 递归 -->
+            <Menu :menuList="item.children"/>
+          </el-sub-menu>
         </template>
-      </el-menu-item>
-    </template>
-
-    <el-sub-menu :index="item.path" v-if="!item.meta.hidden && item.children && item.children.length > 1">
-      <template #title>
-        <el-icon>
-          <component :is="item.meta.icon"/>
-        </el-icon>
-        <span>{{ item.meta.title }}</span>
+        <template v-else>
+          <el-menu-item :index="item.path" @click="goRoute">
+            <el-icon>
+              <component :is="item.meta.icon"/>
+            </el-icon>
+            <template #title>
+              <span>{{ item.meta.title }}</span>
+            </template>
+          </el-menu-item>
+        </template>
       </template>
-      <Menu :menuList="item.children"/>
-    </el-sub-menu>
+    </template>
+    <template v-else>
+      <!-- 非菜单且children 非空 才会将子节点递归 -->
+      <Menu :menuList="item.children" v-if="item.children"/>
+    </template>
   </template>
 </template>
 

@@ -9,7 +9,7 @@ const constantRoutes: RouteRecordRaw[] = [
     name: 'root',
     meta: {
       title: '根',
-      hidden: true,
+      isMenu: false,
       icon: "Promotion",
     },
     children: [
@@ -19,6 +19,7 @@ const constantRoutes: RouteRecordRaw[] = [
         name: 'home',
         meta: {
           title: '主页',
+          isMenu: true,
           hidden: false,
           icon: "Promotion",
         },
@@ -30,7 +31,7 @@ const constantRoutes: RouteRecordRaw[] = [
     name: 'login',
     meta: {
       title: '登录',
-      hidden: true,
+      isMenu: false,
       icon: "Promotion",
     }
   }, {
@@ -39,6 +40,7 @@ const constantRoutes: RouteRecordRaw[] = [
     name: 'Screen',
     meta: {
       title: '数据大屏',
+      isMenu: true,
       hidden: true,
       icon: "Platform",
     }
@@ -48,6 +50,7 @@ const constantRoutes: RouteRecordRaw[] = [
     name: 'Acl',
     meta: {
       title: '权限管理',
+      isMenu: true,
       hidden: false,
       icon: "Lock",
     },
@@ -58,6 +61,7 @@ const constantRoutes: RouteRecordRaw[] = [
         name: 'User',
         meta: {
           title: '用户管理',
+          isMenu: true,
           hidden: false,
           icon: "User",
         },
@@ -67,6 +71,7 @@ const constantRoutes: RouteRecordRaw[] = [
         name: 'Role',
         meta: {
           title: '角色管理',
+          isMenu: true,
           hidden: false,
           icon: "UserFilled",
         },
@@ -76,6 +81,7 @@ const constantRoutes: RouteRecordRaw[] = [
         name: 'Permission',
         meta: {
           title: '菜单管理',
+          isMenu: true,
           hidden: false,
           icon: "Monitor",
         },
@@ -87,6 +93,7 @@ const constantRoutes: RouteRecordRaw[] = [
     name: 'Product',
     meta: {
       title: '商品管理',
+      isMenu: true,
       hidden: true,
       icon: "Goods",
     },
@@ -97,6 +104,7 @@ const constantRoutes: RouteRecordRaw[] = [
         name: 'Trademark',
         meta: {
           title: '品牌管理',
+          isMenu: true,
           hidden: true,
           icon: "ShoppingCartFull",
         },
@@ -106,6 +114,7 @@ const constantRoutes: RouteRecordRaw[] = [
         name: 'Attr',
         meta: {
           title: '属性管理',
+          isMenu: true,
           hidden: true,
           icon: "UserFilled",
         },
@@ -115,6 +124,7 @@ const constantRoutes: RouteRecordRaw[] = [
         name: 'Spu',
         meta: {
           title: 'SPU管理',
+          isMenu: true,
           hidden: true,
           icon: "Monitor",
         },
@@ -124,9 +134,33 @@ const constantRoutes: RouteRecordRaw[] = [
         name: 'Sku',
         meta: {
           title: 'SKU管理',
+          isMenu: true,
           hidden: true,
           icon: "Monitor",
         },
+      }
+    ]
+  }, {
+    path: RoutePaths.MOCK,
+    component: () => import('@/layout/index.vue'),
+    name: 'Mock',
+    meta: {
+      title: 'Data Mock',
+      isMenu: true,
+      hidden: false,
+      icon: 'Promotion',
+    },
+    children: [
+      {
+        path: RoutePaths.MOCK_TEMP,
+        component: () => import('@/views/mock/temp/index.vue'),
+        name: 'Mock Temp',
+        meta: {
+          title: '临时占位菜单',
+          isMenu: true,
+          hidden: false,
+          icon: 'Promotion'
+        }
       }
     ]
   }, {
@@ -135,7 +169,7 @@ const constantRoutes: RouteRecordRaw[] = [
     name: '404',
     meta: {
       title: '404',
-      hidden: true,
+      isMenu: false,
       icon: "Promotion",
     }
   }, {
@@ -144,7 +178,7 @@ const constantRoutes: RouteRecordRaw[] = [
     name: 'Any',
     meta: {
       title: 'any',
-      hidden: true,
+      isMenu: false,
       icon: "Promotion",
     }
   }
