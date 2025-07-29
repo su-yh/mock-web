@@ -1,7 +1,7 @@
 
 
 export default {
-  title: '硅谷甄选运营平台',
+  title: import.meta.env.VITE_APP_TITLE,
   logo: '/src/assets/public/logo.png'
 }
 

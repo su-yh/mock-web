@@ -23,4 +23,8 @@ export interface UserInfoEntity {
   dept: object,
 }
 
+export interface UserRoleListReqDto {
+  userId: number | string,
+  roleIds: string[],
+}
 

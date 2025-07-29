@@ -133,6 +133,8 @@ import {ElMessage} from "element-plus";
 import {Delete, Edit, User} from "@element-plus/icons-vue";
 import type { CheckboxValueType } from 'element-plus'
 import {SysRoleEntity} from "@/api/acl/role/types";
+import {bindUserRoles} from "@/api/user";
+import {UserRoleListReqDto} from "@/api/user/types";
 
 enum DrawerCategory {
   CREATE,
@@ -337,15 +339,35 @@ const cancelSetRole = () => {
   drawerRole.value = false;
 }
 
-const saveSetRole = () => {
+const saveSetRole = async () => {
   console.log("current username: ", drawerUserEntity.value.username)
   console.log("current nickname: ", drawerUserEntity.value.nickname)
   for (let i = 0; i < checkedRoles.value.length; i++) {
     console.log("current checked items: ", checkedRoles.value[i].roleName)
   }
 
+  let userRoleListReqDto: UserRoleListReqDto = {
+    userId: drawerUserEntity.value.id as string,
+    roleIds: []
+  }
+
+  for (let i = 0; i < checkedRoles.value.length; i++) {
+    userRoleListReqDto.roleIds.push(checkedRoles.value[i].roleId as string);
+  }
+
+  const result: ResponseBase<number> = await bindUserRoles(userRoleListReqDto)
+  if (result.code != 0) {
+    ElMessage({
+      type: 'error',
+      message: result.message
+    })
+    return;
+  }
+
   // 隐藏设置角色的抽屉
   drawerRole.value = false;
+
+  await searchUserList()
 }
 
 </script>
