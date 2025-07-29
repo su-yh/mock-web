@@ -5,7 +5,7 @@ import nprogress from 'nprogress';
 import "nprogress/nprogress.css"
 import useUserStore from "./store/modules/user";
 import pinia from "./store";
-import RoutePaths from '@/router/routePathEnum'
+import RoutePaths from '@/router/routePathConstants'
 const routePrefix = import.meta.env.VITE_ROUTE_PREFIX;
 
 nprogress.configure({showSpinner: false})

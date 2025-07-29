@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import {ArrowDown} from "@element-plus/icons-vue";
 import useUserStore from "@/store/modules/user";
-import RoutePaths from "@/router/routePathEnum";
+import RoutePaths from "@/router/routePathConstants";
 import useSettingStore from "@/store/modules/setting";
 import {useRouter, useRoute} from "vue-router";
 const userStore = useUserStore();
