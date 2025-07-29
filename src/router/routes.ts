@@ -33,15 +33,15 @@ const constantRoutes: RouteRecordRaw[] = [
       hidden: true,
       icon: "Promotion",
     }
-  // }, {
-  //   path: RoutePaths.SCREEN,
-  //   component: () => import('@/views/screen/index.vue'),
-  //   name: 'Screen',
-  //   meta: {
-  //     title: '数据大屏',
-  //     hidden: false,
-  //     icon: "Platform",
-  //   }
+  }, {
+    path: RoutePaths.SCREEN,
+    component: () => import('@/views/screen/index.vue'),
+    name: 'Screen',
+    meta: {
+      title: '数据大屏',
+      hidden: true,
+      icon: "Platform",
+    }
   }, {
     path: RoutePaths.ACL,
     component: () => import('@/layout/index.vue'),
@@ -81,54 +81,54 @@ const constantRoutes: RouteRecordRaw[] = [
         },
       }
     ]
-  // },{
-  //   path: RoutePaths.PRODUCT,
-  //   component: () => import('@/layout/index.vue'),
-  //   name: 'Product',
-  //   meta: {
-  //     title: '商品管理',
-  //     hidden: false,
-  //     icon: "Goods",
-  //   },
-  //   children: [
-  //     {
-  //       path: RoutePaths.PRODUCT_TRADEMARK,
-  //       component: () => import('@/views/product/trademark/index.vue'),
-  //       name: 'Trademark',
-  //       meta: {
-  //         title: '品牌管理',
-  //         hidden: false,
-  //         icon: "ShoppingCartFull",
-  //       },
-  //     }, {
-  //       path: RoutePaths.PRODUCT_ATTR,
-  //       component: () => import('@/views/product/attr/index.vue'),
-  //       name: 'Attr',
-  //       meta: {
-  //         title: '属性管理',
-  //         hidden: false,
-  //         icon: "UserFilled",
-  //       },
-  //     }, {
-  //       path: RoutePaths.PRODUCT_SPU,
-  //       component: () => import('@/views/product/spu/index.vue'),
-  //       name: 'Spu',
-  //       meta: {
-  //         title: 'SPU管理',
-  //         hidden: false,
-  //         icon: "Monitor",
-  //       },
-  //     }, {
-  //       path: RoutePaths.PRODUCT_SKU,
-  //       component: () => import('@/views/product/sku/index.vue'),
-  //       name: 'Sku',
-  //       meta: {
-  //         title: 'SKU管理',
-  //         hidden: false,
-  //         icon: "Monitor",
-  //       },
-  //     }
-  //   ]
+  },{
+    path: RoutePaths.PRODUCT,
+    component: () => import('@/layout/index.vue'),
+    name: 'Product',
+    meta: {
+      title: '商品管理',
+      hidden: true,
+      icon: "Goods",
+    },
+    children: [
+      {
+        path: RoutePaths.PRODUCT_TRADEMARK,
+        component: () => import('@/views/product/trademark/index.vue'),
+        name: 'Trademark',
+        meta: {
+          title: '品牌管理',
+          hidden: true,
+          icon: "ShoppingCartFull",
+        },
+      }, {
+        path: RoutePaths.PRODUCT_ATTR,
+        component: () => import('@/views/product/attr/index.vue'),
+        name: 'Attr',
+        meta: {
+          title: '属性管理',
+          hidden: true,
+          icon: "UserFilled",
+        },
+      }, {
+        path: RoutePaths.PRODUCT_SPU,
+        component: () => import('@/views/product/spu/index.vue'),
+        name: 'Spu',
+        meta: {
+          title: 'SPU管理',
+          hidden: true,
+          icon: "Monitor",
+        },
+      }, {
+        path: RoutePaths.PRODUCT_SKU,
+        component: () => import('@/views/product/sku/index.vue'),
+        name: 'Sku',
+        meta: {
+          title: 'SKU管理',
+          hidden: true,
+          icon: "Monitor",
+        },
+      }
+    ]
   }, {
     path: RoutePaths.NOT_FOUND,
     component: () => import('@/views/404/index.vue'),
