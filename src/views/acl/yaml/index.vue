@@ -17,7 +17,7 @@
             @update:value="handleYamlChange"
         />
         <div class="editor-footer">
-          <span>输入停止后 3 秒自动转换</span>
+          <span>输入停止后 1 秒自动转换</span>
         </div>
       </div>
 
@@ -25,28 +25,19 @@
       <div class="result-panel">
         <h3>JSON 结果</h3>
         <div class="json-display">
+          <!-- 仅显示转换成功的结果或错误信息 -->
           <pre v-if="jsonResult" class="valid">{{ jsonResult }}</pre>
 
           <!-- 友好的错误提示 -->
           <div v-if="errorMessage" class="error-container">
             <div class="error-header">
               <i class="icon-warning">⚠️</i>
-              <span>格式有误，请检查</span>
+              <span>转换失败</span>
             </div>
             <div class="error-details">
               <p>{{ friendlyErrorMsg }}</p>
               <p class="error-hint">提示：YAML 要求严格的缩进和语法，例如列表项需要用短横线开头</p>
             </div>
-          </div>
-
-          <div v-if="isWaiting" class="waiting">
-            <div class="spinner"></div>
-            <p>正在等待输入完成...</p>
-          </div>
-
-          <div v-if="isLoading" class="loading">
-            <div class="spinner"></div>
-            <p>正在转换...</p>
           </div>
         </div>
       </div>
@@ -89,9 +80,7 @@ base:
 `)
 const jsonResult = ref('')
 const rawErrorMessage = ref('')
-const isLoading = ref(false)
-const isWaiting = ref(false)
-let debounceTimer = null
+let debounceTimer = null // 仅保留定时器，移除加载状态变量
 
 // 编辑器配置
 const editorOptions = {
@@ -111,18 +100,10 @@ const handleYamlChange = (value) => {
     clearTimeout(debounceTimer)
   }
 
-  // 显示等待状态
-  isWaiting.value = true
-  isLoading.value = false
-  jsonResult.value = ''
-  rawErrorMessage.value = ''
-
-  // 设置3秒延迟后转换
+  // 1秒延迟后转换（不显示等待状态）
   debounceTimer = setTimeout(() => {
-    isWaiting.value = false
-    isLoading.value = true
     convertYamlToJson(value)
-  }, 3000)
+  }, 1000)
 }
 
 // 转换逻辑
@@ -131,14 +112,11 @@ const convertYamlToJson = (yaml) => {
     // 解析YAML并转换为JSON
     const parsedData = jsYaml.load(yaml)
     jsonResult.value = JSON.stringify(parsedData, null, 2)
-    rawErrorMessage.value = ''
+    rawErrorMessage.value = '' // 成功时清空错误信息
   } catch (error) {
-    // 捕获错误但不显示过于技术化的信息
+    // 捕获错误
     rawErrorMessage.value = error.message
-    jsonResult.value = ''
-  } finally {
-    isLoading.value = false
-    isWaiting.value = false
+    jsonResult.value = '' // 失败时清空结果
   }
 }
 
@@ -162,17 +140,14 @@ const friendlyErrorMsg = computed(() => {
   }
 })
 
-// 计算属性 - 状态文本和样式
+// 计算属性 - 状态文本和样式（简化状态）
 const statusText = computed(() => {
-  if (isWaiting.value) return '等待输入完成...'
-  if (isLoading.value) return '正在转换...'
-  if (rawErrorMessage.value) return '存在格式问题'
-  if (jsonResult.value) return '转换完成'
+  if (rawErrorMessage.value) return '转换失败'
+  if (jsonResult.value) return '转换成功'
   return '准备就绪'
 })
 
 const statusClass = computed(() => {
-  if (isWaiting.value || isLoading.value) return 'status-pending'
   if (rawErrorMessage.value) return 'status-error'
   if (jsonResult.value) return 'status-success'
   return 'status-default'
@@ -191,7 +166,13 @@ convertYamlToJson(yamlContent.value)
 const save = () => {
   console.log("保存，yaml 格式：", yamlContent.value)
   console.log("保存，json 格式：", jsonResult.value)
-  console.log("保存，json 格式, master 块：", jsonResult.value)
+  // 解析JSON获取master块
+  try {
+    const jsonObject = JSON.parse(jsonResult.value)
+    console.log("保存，master 块：", jsonObject?.base?.datasource?.hikari?.master)
+  } catch (e) {
+    console.error("解析JSON失败：", e)
+  }
 }
 </script>
 
@@ -321,32 +302,9 @@ pre {
   font-size: 13px;
 }
 
-.waiting, .loading {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #f8fafc;
-  color: #64748b;
-  gap: 12px;
-}
-
-.spinner {
-  width: 30px;
-  height: 30px;
-  border: 3px solid #e2e8f0;
-  border-top-color: #3b82f6;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
+/* 移除加载状态样式 */
+.spinner, .waiting, .loading {
+  display: none;
 }
 
 /* 编辑器样式穿透 */
