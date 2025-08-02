@@ -17,7 +17,7 @@
             @update:value="handleYamlChange"
         />
         <div class="editor-footer">
-          <span>输入停止后 1 秒自动转换</span>
+          <span>输入停止后 3 秒自动转换</span>
         </div>
       </div>
 
@@ -117,12 +117,12 @@ const handleYamlChange = (value) => {
   jsonResult.value = ''
   rawErrorMessage.value = ''
 
-  // 设置1秒延迟后转换
+  // 设置3秒延迟后转换
   debounceTimer = setTimeout(() => {
     isWaiting.value = false
     isLoading.value = true
     convertYamlToJson(value)
-  }, 1000)
+  }, 3000)
 }
 
 // 转换逻辑
