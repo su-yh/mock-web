@@ -79,6 +79,15 @@ const constantRoutes: RouteRecordRaw[] = [
           hidden: false,
           icon: "Monitor",
         },
+      }, {
+        path: RoutePaths.ACL_YAML,
+        component: () => import('@/views/acl/yaml/index.vue'),
+        name: 'Yaml',
+        meta: {
+          title: 'Yaml',
+          hidden: false,
+          icon: "monitor",
+        }
       }
     ]
   // },{

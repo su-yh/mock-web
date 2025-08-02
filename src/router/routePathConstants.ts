@@ -9,6 +9,7 @@ const RoutePaths = {
   ACL_USER: routePrefix + '/acl/user',
   ACL_ROLE: routePrefix + '/acl/role',
   ACL_PERMISSION: routePrefix + '/acl/permission',
+  ACL_YAML: routePrefix + '/acl/yaml',
   PRODUCT: routePrefix + '/product',
   PRODUCT_TRADEMARK: routePrefix + '/product/trademark',
   PRODUCT_ATTR: routePrefix + '/product/attr',
