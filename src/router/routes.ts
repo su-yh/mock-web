@@ -161,6 +161,16 @@ const constantRoutes: RouteRecordRaw[] = [
           hidden: false,
           icon: 'Promotion'
         }
+      }, {
+        path: RoutePaths.MOCK_YAML,
+        component: () => import('@/views/mock/yaml/index.vue'),
+        name: 'Yaml',
+        meta: {
+          title: 'Yaml',
+          isMenu: true,
+          hidden: false,
+          icon: "monitor",
+        }
       }
     ]
   }, {

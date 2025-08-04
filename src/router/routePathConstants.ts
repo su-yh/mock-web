@@ -16,6 +16,7 @@ const RoutePaths = {
   PRODUCT_SKU: routePrefix + '/product/sku',
   MOCK: routePrefix + '/mock',
   MOCK_TEMP: routePrefix + '/mock/temp',
+  MOCK_YAML: routePrefix + '/mock/yaml',
   NOT_FOUND: routePrefix + '/404',
   OTHER: routePrefix + '/:pathMatch(.*)*'
 } as const; // 使用as const 让类型更精确
