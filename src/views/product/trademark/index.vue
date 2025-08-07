@@ -85,7 +85,7 @@ import {
   deleteTrademark as deleteTrademarkReq,
 } from "@/api/product/trademark";
 import {upload} from '@/api/file';
-import {ListPageParams, ResponseBase} from '@/api/base/types'
+import {PageParams, ResponseBase} from '@/api/base/types'
 import {TrademarkEntity} from "@/api/product/trademark/types";
 import {PageResult} from "@/api/base/types";
 import {ElMessage, UploadProps} from "element-plus";
@@ -103,7 +103,7 @@ interface DialogForm {
   data: TrademarkEntity;
 }
 
-let pageParam = reactive<ListPageParams>({
+let pageParam = reactive<PageParams>({
   pageNo: 1, pageSize: 3
 });
 

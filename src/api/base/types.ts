@@ -7,7 +7,7 @@ export interface ResponseBase<T = any> {
   data: T;
 }
 
-export interface ListPageParams {
+export interface PageParams {
   pageNo: number;
   pageSize: number;
 }
@@ -16,3 +16,5 @@ export interface PageResult<T> {
   total: number;
   list: Array<T>;
 }
+
+

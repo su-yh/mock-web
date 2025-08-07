@@ -1,5 +1,5 @@
 import request from '@/utils/request';
-import {ListPageParams, ResponseBase, PageResult} from "@/api/base/types";
+import {PageParams, ResponseBase, PageResult} from "@/api/base/types";
 import {TrademarkEntity} from "@/api/product/trademark/types";
 
 enum API {
@@ -11,7 +11,7 @@ enum API {
 
 
 
-export const listPage = (params: ListPageParams) => request.get<any, ResponseBase<PageResult<TrademarkEntity>>>(API.LIST_PAGE_URL, {params});
+export const listPage = (params: PageParams) => request.get<any, ResponseBase<PageResult<TrademarkEntity>>>(API.LIST_PAGE_URL, {params});
 export const createTrademark = (trademarkEntity: TrademarkEntity) => request.post<TrademarkEntity, ResponseBase>(API.CREATE_URL, trademarkEntity);
 export const updateTrademark = (trademarkEntity: TrademarkEntity) => request.post<TrademarkEntity, ResponseBase>(API.UPDATE_URL, trademarkEntity);
 export const deleteTrademark = (id: number) => request.post<number, ResponseBase>(API.DELETE_URL, {id});

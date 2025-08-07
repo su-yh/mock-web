@@ -1,8 +1,8 @@
 import {RuoyiEnableStatusEnums} from "@/api/base/enums";
-import {ListPageParams} from "@/api/base/types";
+import {PageParams} from "@/api/base/types";
 import {SysRoleEntity} from "@/api/acl/role/types";
 
-export interface UserListPageParams extends ListPageParams{
+export interface UserPageParams extends PageParams{
   nameLike: string
 }
 

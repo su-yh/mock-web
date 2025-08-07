@@ -127,7 +127,7 @@
 import {onMounted, ref} from "vue";
 import {ResponseBase} from '@/api/base/types';
 import {createUser, updateUser, deleteUser, listPage} from "@/api/acl/user";
-import {UserInfo, UserListPageParams, SysUserEntity} from '@/api/acl/user/types'
+import {UserInfo, UserPageParams, SysUserEntity} from '@/api/acl/user/types'
 import {listAll as listAllRoles} from '@/api/acl/role';
 import {ElMessage} from "element-plus";
 import {Delete, Edit, User} from "@element-plus/icons-vue";
@@ -165,10 +165,10 @@ const checkedRoles = ref<SysRoleEntity[]>([]);
 const isRoleIndeterminate = ref(true);
 
 const searchUserList = async () => {
-  const userListPageParams: UserListPageParams = {
+  const userPageParams: UserPageParams = {
     pageNo: pageNo.value, pageSize: pageSize.value, nameLike: nameLike.value
   };
-  const result = await listPage(userListPageParams);
+  const result = await listPage(userPageParams);
   if (result.code != 0) {
     ElMessage({
       type: "error",
