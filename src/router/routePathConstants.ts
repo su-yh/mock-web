@@ -18,6 +18,11 @@ const RoutePaths = {
   MOCK_TEST_MANAGEMENT: routePrefix + '/mock/test/manage',
   MOCK_TEST_TEMP: routePrefix + '/mock/test/manage/temp',
   MOCK_TEST_YAML: routePrefix + '/mock/test/yaml',
+  MOCK_CONFIG: routePrefix + '/mock/config',
+  MOCK_CONFIG_ENV: routePrefix + '/mock/config/env',
+  MOCK_CONFIG_PLATFORM: routePrefix + '/mock/config/platform',
+  MOCK_CONFIG_DATASOURCE: routePrefix + '/mock/config/datasource',
+  MOCK_CONFIG_RABBITMQ: routePrefix + '/mock/config/rabbitmq',
   NOT_FOUND: routePrefix + '/404',
   OTHER: routePrefix + '/:pathMatch(.*)*'
 } as const; // 使用as const 让类型更精确

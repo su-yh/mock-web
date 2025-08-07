@@ -90,11 +90,11 @@ const constantRoutes: RouteRecordRaw[] = [
   }, {
     path: RoutePaths.MOCK_TEST,
     component: () => import('@/layout/index.vue'),
-    name: 'Mock Test',
+    name: 'MockTest',
     meta: {
       title: 'Data Mock Test',
       isMenu: true,
-      hidden: false,
+      hidden: true,
       icon: 'Promotion',
     },
     children: [
@@ -134,6 +134,59 @@ const constantRoutes: RouteRecordRaw[] = [
           hidden: false,
           icon: "monitor",
         }
+      }
+    ]
+  }, {
+    path: RoutePaths.MOCK_CONFIG,
+    component: () => import('@/layout/index.vue'),
+    name: 'Mock',
+    meta: {
+      title: 'Data Mock',
+      isMenu: true,
+      hidden: false,
+      icon: 'Promotion',
+    },
+    children: [
+      {
+        path: RoutePaths.MOCK_CONFIG_ENV,
+        component: () => import('@/views/mock/config/env/index.vue'),
+        name: 'MockConfigEnv',
+        meta: {
+          title: 'MockConfigEnv',
+          isMenu: true,
+          hidden: false,
+          icon: "monitor",
+        }
+      }, {
+        path: RoutePaths.MOCK_CONFIG_PLATFORM,
+        component: () => import('@/views/mock/config/platform/index.vue'),
+        name: 'MockConfigPlatform',
+        meta: {
+          title: 'MockConfigPlatform',
+          isMenu: true,
+          hidden: false,
+          icon: "monitor",
+        },
+      }, {
+        path: RoutePaths.MOCK_CONFIG_DATASOURCE,
+        component: () => import('@/views/mock/config/datasource/index.vue'),
+        name: 'MockConfigDataSource',
+        meta: {
+          title: 'MockConfigDataSource',
+          isMenu: true,
+          hidden: false,
+          icon: "monitor",
+        },
+      }, {
+        path: RoutePaths.MOCK_CONFIG_RABBITMQ,
+        component: () => import('@/views/mock/config/rabbitmq/index.vue'),
+        name: 'MockConfigRabbitmq',
+        meta: {
+          title: 'MockConfigRabbitmq',
+          isMenu: true,
+          hidden: false,
+          icon: "monitor",
+        },
       }
     ]
   }, {
