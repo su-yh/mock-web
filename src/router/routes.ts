@@ -87,59 +87,6 @@ const constantRoutes: RouteRecordRaw[] = [
         },
       }
     ]
-  },{
-    path: RoutePaths.PRODUCT,
-    component: () => import('@/layout/index.vue'),
-    name: 'Product',
-    meta: {
-      title: '商品管理',
-      isMenu: true,
-      hidden: true,
-      icon: "Goods",
-    },
-    children: [
-      {
-        path: RoutePaths.PRODUCT_TRADEMARK,
-        component: () => import('@/views/product/trademark/index.vue'),
-        name: 'Trademark',
-        meta: {
-          title: '品牌管理',
-          isMenu: true,
-          hidden: true,
-          icon: "ShoppingCartFull",
-        },
-      }, {
-        path: RoutePaths.PRODUCT_ATTR,
-        component: () => import('@/views/product/attr/index.vue'),
-        name: 'Attr',
-        meta: {
-          title: '属性管理',
-          isMenu: true,
-          hidden: true,
-          icon: "UserFilled",
-        },
-      }, {
-        path: RoutePaths.PRODUCT_SPU,
-        component: () => import('@/views/product/spu/index.vue'),
-        name: 'Spu',
-        meta: {
-          title: 'SPU管理',
-          isMenu: true,
-          hidden: true,
-          icon: "Monitor",
-        },
-      }, {
-        path: RoutePaths.PRODUCT_SKU,
-        component: () => import('@/views/product/sku/index.vue'),
-        name: 'Sku',
-        meta: {
-          title: 'SKU管理',
-          isMenu: true,
-          hidden: true,
-          icon: "Monitor",
-        },
-      }
-    ]
   }, {
     path: RoutePaths.MOCK,
     component: () => import('@/layout/index.vue'),
@@ -152,15 +99,31 @@ const constantRoutes: RouteRecordRaw[] = [
     },
     children: [
       {
-        path: RoutePaths.MOCK_TEMP,
-        component: () => import('@/views/mock/temp/index.vue'),
-        name: 'Mock Temp',
+        path: RoutePaths.MOCK_MANAGEMENT, // 需要在routePathConstants中添加此常量
+        name: 'MockManagement',
+        component: () => import('@/layout/blank/index.vue'),
+        // redirect: RoutePaths.MOCK_TEMP,
         meta: {
-          title: '临时占位菜单',
+          title: 'Mock管理',
           isMenu: true,
           hidden: false,
-          icon: 'Promotion'
-        }
+          icon: 'Folder'
+        },
+        children: [
+          // 将原来的Mock Temp移动到中间目录下
+          {
+            path: RoutePaths.MOCK_TEMP,
+            component: () => import('@/views/mock/temp/index.vue'),
+            name: 'Mock Temp',
+            meta: {
+              title: '临时占位菜单',
+              isMenu: true,
+              hidden: false,
+              icon: 'Promotion'
+            }
+          }
+          // 可以在这里添加更多子路由
+        ]
       }, {
         path: RoutePaths.MOCK_YAML,
         component: () => import('@/views/mock/yaml/index.vue'),
