@@ -88,18 +88,18 @@ const constantRoutes: RouteRecordRaw[] = [
       }
     ]
   }, {
-    path: RoutePaths.MOCK,
+    path: RoutePaths.MOCK_TEST,
     component: () => import('@/layout/index.vue'),
-    name: 'Mock',
+    name: 'Mock Test',
     meta: {
-      title: 'Data Mock',
+      title: 'Data Mock Test',
       isMenu: true,
       hidden: false,
       icon: 'Promotion',
     },
     children: [
       {
-        path: RoutePaths.MOCK_MANAGEMENT, // 需要在routePathConstants中添加此常量
+        path: RoutePaths.MOCK_TEST_MANAGEMENT, // 需要在routePathConstants中添加此常量
         name: 'MockManagement',
         component: () => import('@/layout/blank/index.vue'),
         // redirect: RoutePaths.MOCK_TEMP,
@@ -112,8 +112,8 @@ const constantRoutes: RouteRecordRaw[] = [
         children: [
           // 将原来的Mock Temp移动到中间目录下
           {
-            path: RoutePaths.MOCK_TEMP,
-            component: () => import('@/views/mock/temp/index.vue'),
+            path: RoutePaths.MOCK_TEST_TEMP,
+            component: () => import('@/views/mock_test/temp/index.vue'),
             name: 'Mock Temp',
             meta: {
               title: '临时占位菜单',
@@ -125,8 +125,8 @@ const constantRoutes: RouteRecordRaw[] = [
           // 可以在这里添加更多子路由
         ]
       }, {
-        path: RoutePaths.MOCK_YAML,
-        component: () => import('@/views/mock/yaml/index.vue'),
+        path: RoutePaths.MOCK_TEST_YAML,
+        component: () => import('@/views/mock_test/yaml/index.vue'),
         name: 'Yaml',
         meta: {
           title: 'Yaml',
