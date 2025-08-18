@@ -1,7 +1,6 @@
 import request from '@/utils/request'
-import {ResponseBase, PageResult} from "@/api/base/types";
+import {ResponseBase, PageParams, PageResult} from "@/api/base/types";
 import {MockEnvConfigEntity} from "./types";
-import {PageParams} from "../../../base/types";
 
 enum API {
   LIST_PAGE_URL = '/platform/env/listPage',

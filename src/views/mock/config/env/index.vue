@@ -4,7 +4,10 @@
     <h1>Hi: Mock Config Env</h1>
   </el-card>
   <el-card class="card">
-    <el-button class="btn_create" type="primary" @click="createEnv">添加环境</el-button>
+    <div class="btns">
+      <el-button class="btn_create" type="primary" @click="createEnv">添加环境</el-button>
+      <el-button type="primary" @click="pageList">搜索</el-button>
+    </div>
     <el-table class="table" border :data="pageResult.list">
       <el-table-column align="center" label="序号" type="index" width="80px"/>
       <el-table-column align="center" label="env" prop="env" width="200px"/>
@@ -94,8 +97,8 @@ let drawer = ref<boolean>(false);
 let drawerTitle = ref<string>('创建/编辑环境信息');
 let drawerEntity = ref<MockEnvConfigEntity>({env: '', enabled: true});
 
-onMounted(() => {
-  pageList();
+onMounted(async () => {
+  await pageList();
 })
 
 const pageList = async () => {
@@ -116,25 +119,20 @@ const resetDrawerEntity = () => {
   drawerEntity.value = {env: '', enabled: true};
 }
 const createEnv = () => {
-  console.log("点击：添加环境按钮")
   resetDrawerEntity();
   drawerTitle.value = '创建环境'
   drawer.value = true;
 }
 const editEnv = (row: MockEnvConfigEntity) => {
-  console.log(`编辑，id: ${row.id}, env: ${row.env}, enabled: ${row.enabled}`)
   drawerTitle.value = '编辑环境'
   resetDrawerEntity();
   drawerEntity.value = {...row}
   drawer.value = true;
 }
 const deleteEnv = async (row: MockEnvConfigEntity) => {
-  console.log(`删除，id: ${row.id}`)
   await deleteReq(row.id as string);
 }
 const handleStatusChange = async (row: MockEnvConfigEntity) => {
-  console.log(`点击：启用/禁用按钮, env: ${row.env}, enabled: ${row.enabled}`)
-  console.log(`envList.value[0], env: ${pageResult.list[0].env}, enabled: ${pageResult.list[0].enabled}`)
   const result = await statusSwitchReq(row.id as string, row.enabled);
   if (result.code != 0) {
     ElMessage({
@@ -183,6 +181,10 @@ export default {
 
 <style scoped lang="scss">
   .card {
+    .btns {
+      display: flex;
+      justify-content: space-between;
+    }
     .table {
       margin-top: 10px;
     }
