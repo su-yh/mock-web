@@ -84,7 +84,7 @@ import {ref, reactive, onMounted} from 'vue'
 import {MockEnvConfigEntity} from "@/api/mock/config/env/types";
 import {Delete, Edit} from "@element-plus/icons-vue";
 import {PageParams, PageResult, ResponseBase} from "@/api/base/types";
-import {listPageReq, createReq, updateReq, deleteReq} from '@/api/mock/config/env';
+import {listPageReq, createReq, updateReq, deleteReq, statusSwitchReq} from '@/api/mock/config/env';
 import {ElMessage} from "element-plus";
 
 let pageParam = reactive<PageParams>({pageNo: 1, pageSize: 10});
@@ -135,6 +135,13 @@ const deleteEnv = async (row: MockEnvConfigEntity) => {
 const handleStatusChange = async (row: MockEnvConfigEntity) => {
   console.log(`点击：启用/禁用按钮, env: ${row.env}, enabled: ${row.enabled}`)
   console.log(`envList.value[0], env: ${pageResult.list[0].env}, enabled: ${pageResult.list[0].enabled}`)
+  const result = await statusSwitchReq(row.id as string, row.enabled);
+  if (result.code != 0) {
+    ElMessage({
+      type: 'error',
+      message: result.message
+    })
+  }
   await pageList();
 }
 // 翻页：pageNo
