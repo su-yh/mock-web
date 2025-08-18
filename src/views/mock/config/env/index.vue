@@ -1,6 +1,6 @@
 
 <template>
-  <el-card>
+  <el-card style="margin-bottom: 10px">
     <h1>Hi: Mock Config Env</h1>
   </el-card>
   <el-card class="card">
@@ -42,54 +42,129 @@
         @size-change="sizeChangeHandle"
     />
   </el-card>
+
+  <!-- 抽屉：侧边栏 -->
+  <el-drawer v-model="drawer">
+    <!-- 抽屉：标题 -->
+    <template #header>
+      {{ drawerTitle }}
+    </template>
+    <!-- 抽屉：正文 -->
+    <template #default>
+      <el-form label-width="120px">
+        <el-form-item label="env: ">
+          <template #default>
+            <el-input v-model="drawerEntity.env" placeholder="请输入env"></el-input>
+          </template>
+        </el-form-item>
+        <el-form-item label="描述：">
+          <template #default>
+            <el-input v-model="drawerEntity.description" placeholder="请输入描述"></el-input>
+          </template>
+        </el-form-item>
+        <el-form-item label="启用/禁用：">
+          <template #default>
+            <el-switch v-model="drawerEntity.enabled" defa/>
+          </template>
+        </el-form-item>
+      </el-form>
+    </template>
+    <!-- 抽屉：页脚 -->
+    <template #footer>
+      <div>
+        <el-button @click="drawerCancel">取消</el-button>
+        <el-button type="primary" @click="drawerSave">保存</el-button>
+      </div>
+    </template>
+  </el-drawer>
 </template>
 
 <script setup lang="ts">
-import {reactive, onMounted} from 'vue'
+import {ref, reactive, onMounted} from 'vue'
 import {MockEnvConfigEntity} from "@/api/mock/config/env/types";
 import {Delete, Edit} from "@element-plus/icons-vue";
-import {PageParams, PageResult} from "@/api/base/types";
+import {PageParams, PageResult, ResponseBase} from "@/api/base/types";
+import {listPageReq, createReq, updateReq, deleteReq} from '@/api/mock/config/env';
+import {ElMessage} from "element-plus";
 
 let pageParam = reactive<PageParams>({pageNo: 1, pageSize: 10});
 let pageResult = reactive<PageResult<MockEnvConfigEntity>>({total: 0, list: []});
+// 显示/隐藏抽屉
+let drawer = ref<boolean>(false);
+let drawerTitle = ref<string>('创建/编辑环境信息');
+let drawerEntity = ref<MockEnvConfigEntity>({env: '', enabled: true});
 
 onMounted(() => {
   pageList();
 })
 
 const pageList = async () => {
-  // TODO: suyh - 待实现
-  pageResult.list = [{
-    id: "1",
-    env: 'suyh',
-    description: '',
-    enabled: true,
-    created: '2025-08-07 10:00:00',
-    updated: '2025-08-07 10:00:00',
-  }]
-  pageResult.total = 100
+  const responseBase: ResponseBase<PageResult<MockEnvConfigEntity>> = await listPageReq(pageParam);
+  if (responseBase.code != 0) {
+    ElMessage({
+      type: "error",
+      message: responseBase.message,
+    })
+    return
+  }
+  const data = responseBase.data
+  pageResult.list = data.list;
+  pageResult.total = data.total
 }
 
+const resetDrawerEntity = () => {
+  drawerEntity.value = {env: '', enabled: true};
+}
 const createEnv = () => {
   console.log("点击：添加环境按钮")
+  resetDrawerEntity();
+  drawerTitle.value = '创建环境'
+  drawer.value = true;
 }
 const editEnv = (row: MockEnvConfigEntity) => {
   console.log(`编辑，id: ${row.id}, env: ${row.env}, enabled: ${row.enabled}`)
+  drawerTitle.value = '编辑环境'
+  resetDrawerEntity();
+  drawerEntity.value = {...row}
+  drawer.value = true;
 }
-const deleteEnv = (row: MockEnvConfigEntity) => {
+const deleteEnv = async (row: MockEnvConfigEntity) => {
   console.log(`删除，id: ${row.id}`)
+  await deleteReq(row.id as string);
 }
-const handleStatusChange = (row: MockEnvConfigEntity) => {
+const handleStatusChange = async (row: MockEnvConfigEntity) => {
   console.log(`点击：启用/禁用按钮, env: ${row.env}, enabled: ${row.enabled}`)
   console.log(`envList.value[0], env: ${pageResult.list[0].env}, enabled: ${pageResult.list[0].enabled}`)
+  await pageList();
 }
 // 翻页：pageNo
 const currentChangeHandler = async () => {
-  console.log(`currentChangeHandler, pageNo: ${pageParam.pageNo}, pageSize: ${pageParam.pageSize}`)
+  await pageList();
 }
 // 每页条数：pageSize
 const sizeChangeHandle = async () => {
-  console.log(`sizeChangeHandle, pageNo: ${pageParam.pageNo}, pageSize: ${pageParam.pageSize}`)
+  await pageList();
+}
+
+// 抽屉：取消按钮
+const drawerCancel = async () => {
+  drawer.value = false  // 关闭抽屉
+}
+// 抽屉：保存按钮
+const drawerSave = async () => {
+  const resultSave: ResponseBase = drawerEntity.value.id
+      ? await updateReq(drawerEntity.value)
+      : await createReq(drawerEntity.value);
+  if (resultSave.code != 0) {
+    ElMessage({
+      type: 'error',
+      message: resultSave.message,
+    })
+    return
+  }
+
+  await pageList();
+  drawer.value = false  // 关闭抽屉
 }
 </script>
 
