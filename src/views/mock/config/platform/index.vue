@@ -123,8 +123,15 @@ let drawerEntity = ref<MockPropertiesEntity>({});
 // env下拉列表数据
 const envList = ref<MockEnvConfigEntity[]>([]);
 
-const deleteItem = (entity: MockPropertiesEntity) => {
+const deleteItem = async (entity: MockPropertiesEntity) => {
   console.log("删除: ", entity.id)
+  const result: ResponseBase = await deleteReq(entity.id as string);
+  if (result.code != 0) {
+    ElMessage({type: 'error', message: result.message})
+    return
+  }
+
+  await pageList()
 }
 
 onMounted(async () => {
@@ -211,7 +218,7 @@ const formatTimestamp = (row: MockPropertiesEntity, column: TableColumnCtx<MockP
 
 const createEntity = async () => {
   await loadEnvList();
-  drawerEntity.value = {mode: MockModeEnums.NONE, tsBegin: 0, tsEnd: 0}
+  drawerEntity.value = {mode: MockModeEnums.NONE, tsBegin: 1, tsEnd: 1}
   drawerTitle.value = '新建'
   drawerEnable.value = true
 }
