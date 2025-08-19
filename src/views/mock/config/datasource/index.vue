@@ -10,10 +10,14 @@
       <el-table-column align="center" label="username" prop="username"/>
       <el-table-column align="center" label="password" prop="password"/>
       <el-table-column align="center" label="driverClassName" prop="driverClassName"/>
-      <el-table-column align="center" label="flywayEnabled" prop="flywayEnabled"/>
-      <el-table-column align="center" label="created" prop="created"/>
-      <el-table-column align="center" label="updated" prop="updated"/>
-      <el-table-column align="center" label="操作">
+      <el-table-column align="center" label="flywayEnabled" prop="flywayEnabled" width="180px">
+        <template #default="scope">
+          <el-switch v-model="scope.row.flywayEnabled" @change="handleFlywayEnabled(scope.row)" />
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="created" prop="created" width="180px"/>
+      <el-table-column align="center" label="updated" prop="updated" width="180px"/>
+      <el-table-column align="center" label="操作" width="200px">
         <template #default="scope">
           <el-button type="primary" size="small" :icon="Edit" @click="editDataSource(scope.row)">编辑</el-button>
           <el-popconfirm title="确定要删除这条记录吗？" @confirm="deleteDataSource(scope.row)">
@@ -61,7 +65,7 @@
 import {ref, reactive, onMounted} from 'vue'
 import {PageParams, PageResult, ResponseBase} from "@/api/base/types";
 import {DataSourceEnums, EnvDatasourcePropertiesEntity} from '@/api/mock/config/datasource/types'
-import {listPageReq, createReq, updateReq, deleteReq} from '@/api/mock/config/datasource/index'
+import {listPageReq, createReq, updateReq, deleteReq, flywaySwitchReq} from '@/api/mock/config/datasource'
 import {ElMessage} from "element-plus";
 import {Delete, Edit} from "@element-plus/icons-vue";
 
@@ -120,6 +124,16 @@ const editDataSource = (entity: EnvDatasourcePropertiesEntity) => {
 
 const deleteDataSource = async (entity: EnvDatasourcePropertiesEntity) => {
   const result: ResponseBase = await deleteReq(entity.id as string);
+  if (result.code != 0) {
+    ElMessage({type: 'error', message: result.message})
+    return
+  }
+
+  await pageList()
+}
+
+const handleFlywayEnabled = async (entity: EnvDatasourcePropertiesEntity) => {
+  const result: ResponseBase = await flywaySwitchReq(entity.id as string, entity.flywayEnabled as boolean);
   if (result.code != 0) {
     ElMessage({type: 'error', message: result.message})
     return
