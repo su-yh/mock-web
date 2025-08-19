@@ -54,7 +54,9 @@
       <el-form label-width="120px">
         <el-form-item label="env: ">
           <template #default>
-            <el-input v-model="drawerEntity.env" placeholder="请输入env"/>
+            <el-select v-model="drawerEntity.env" placeholder="请选择env">
+              <el-option v-for="envItem in envList" :key="envItem.id" :label="envItem.env" :value="envItem.env" />
+            </el-select>
           </template>
         </el-form-item>
         <el-form-item label="dataSourceName: ">
@@ -109,6 +111,8 @@ import {ref, reactive, onMounted} from 'vue'
 import {PageParams, PageResult, ResponseBase} from "@/api/base/types";
 import {DataSourceEnums, EnvDatasourcePropertiesEntity} from '@/api/mock/config/datasource/types'
 import {listPageReq, createReq, updateReq, deleteReq, flywaySwitchReq} from '@/api/mock/config/datasource'
+import {MockEnvConfigEntity} from "@/api/mock/config/env/types";
+import {listAllReq as listAllEnvReq} from '@/api/mock/config/env'
 import {ElMessage} from "element-plus";
 import {Delete, Edit} from "@element-plus/icons-vue";
 
@@ -118,7 +122,8 @@ let pageResult = reactive<PageResult<EnvDatasourcePropertiesEntity>>({total: 0, 
 let drawerEnable = ref<boolean>(false)
 let drawerTitle = ref<string>('')
 let drawerEntity = ref<EnvDatasourcePropertiesEntity>({})
-
+// env 下拉列表
+let envList = ref<MockEnvConfigEntity[]>([])
 
 onMounted(async () => {
   await pageList();
@@ -133,6 +138,17 @@ const pageList = async () => {
   const data = result.data
   pageResult.list = data.list;
   pageResult.total = data.total
+}
+
+const loadEnvList = async () => {
+  envList.value = []
+  const result: ResponseBase<MockEnvConfigEntity[]> = await listAllEnvReq();
+  if (result.code != 0) {
+    ElMessage({type: 'error', message: result.message})
+    return
+  }
+
+  envList.value = result.data
 }
 
 // 翻页：pageNo
@@ -163,11 +179,13 @@ const drawerSave = async () => {
 const createDataSource = () => {
   drawerTitle.value = '创建'
   drawerEntity.value = {}
+  loadEnvList()
   drawerEnable.value = true
 }
 const editDataSource = (entity: EnvDatasourcePropertiesEntity) => {
   drawerTitle.value = '编辑'
   drawerEntity.value = {...entity}
+  loadEnvList()
   drawerEnable.value = true
 }
 
