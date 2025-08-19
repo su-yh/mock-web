@@ -1,7 +1,7 @@
 <template>
   <el-card><h1>Hi: Mock Config DataSource</h1></el-card>
   <el-card class="main-card">
-    <el-button type="primary">新建</el-button>
+    <el-button type="primary" @click="createDataSource">新建</el-button>
     <el-table class="table" border :data="pageResult.list" show-overflow-tooltip>
       <el-table-column align="center" label="序号" type="index" width="80px"/>
       <el-table-column align="center" label="env" prop="env" width="200px"/>
@@ -50,7 +50,49 @@
 
     <!-- 抽屉：正文 -->
     <template #default>
-
+      <el-form label-width="120px">
+        <el-form-item label="env: ">
+          <template #default>
+            <el-input v-model="drawerEntity.env" placeholder="请输入env"/>
+          </template>
+        </el-form-item>
+        <el-form-item label="dataSourceName: ">
+          <template #default>
+            <el-select v-model="drawerEntity.dataSourceName" placeholder="请选择dataSourceName">
+              <el-option :value="DataSourceEnums.FLINK_CDS" :label="DataSourceEnums.FLINK_CDS"/>
+              <el-option :value="DataSourceEnums.FLINK_PG_CDAP" :label="DataSourceEnums.FLINK_PG_CDAP"/>
+            </el-select>
+          </template>
+        </el-form-item>
+        <el-form-item label="jdbcUrl: ">
+          <template #default>
+            <el-input v-model="drawerEntity.jdbcUrl" placeholder="请输入jdbcUrl"/>
+          </template>
+        </el-form-item>
+        <el-form-item label="username: ">
+          <template #default>
+            <el-input v-model="drawerEntity.username" placeholder="请输入username"/>
+          </template>
+        </el-form-item>
+        <el-form-item label="password: ">
+          <template #default>
+            <el-input v-model="drawerEntity.password" placeholder="请输入password"/>
+          </template>
+        </el-form-item>
+        <el-form-item label="driverClassName: ">
+          <template #default>
+            <el-select v-model="drawerEntity.driverClassName">
+              <el-option :value="'com.mysql.cj.jdbc.Driver'" :label="'mysql(com.mysql.cj.jdbc.Driver)'"/>
+              <el-option :value="'org.postgresql.Driver'" :label="'pgsql(org.postgresql.Driver)'"/>
+            </el-select>
+          </template>
+        </el-form-item>
+        <el-form-item label="flywayEnabled: ">
+          <template #default>
+            <el-switch v-model="drawerEntity.flywayEnabled"/>
+          </template>
+        </el-form-item>
+      </el-form>
     </template>
 
     <!-- 抽屉：页脚 -->
@@ -117,8 +159,14 @@ const drawerSave = async () => {
   drawerEnable.value = false  // 关闭抽屉
 }
 
+const createDataSource = () => {
+  drawerTitle.value = '创建'
+  drawerEntity.value = {}
+  drawerEnable.value = true
+}
 const editDataSource = (entity: EnvDatasourcePropertiesEntity) => {
-  // TODO: suyh - 待实现
+  drawerTitle.value = '编辑'
+  drawerEntity.value = {...entity}
   drawerEnable.value = true
 }
 

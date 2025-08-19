@@ -67,7 +67,7 @@
         </el-form-item>
         <el-form-item label="启用/禁用：">
           <template #default>
-            <el-switch v-model="drawerEntity.enabled" defa/>
+            <el-switch v-model="drawerEntity.enabled"/>
           </template>
         </el-form-item>
       </el-form>
@@ -123,17 +123,16 @@ const createEnv = () => {
   drawerTitle.value = '创建环境'
   drawerEnable.value = true;
 }
-const editEnv = (row: MockEnvConfigEntity) => {
+const editEnv = (entity: MockEnvConfigEntity) => {
   drawerTitle.value = '编辑环境'
-  resetDrawerEntity();
-  drawerEntity.value = {...row}
+  drawerEntity.value = {...entity}
   drawerEnable.value = true;
 }
-const deleteEnv = async (row: MockEnvConfigEntity) => {
-  await deleteReq(row.id as string);
+const deleteEnv = async (entity: MockEnvConfigEntity) => {
+  await deleteReq(entity.id as string);
 }
-const handleStatusChange = async (row: MockEnvConfigEntity) => {
-  const result = await statusSwitchReq(row.id as string, row.enabled);
+const handleStatusChange = async (entity: MockEnvConfigEntity) => {
+  const result = await statusSwitchReq(entity.id as string, entity.enabled);
   if (result.code != 0) {
     ElMessage({
       type: 'error',
