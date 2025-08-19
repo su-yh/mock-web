@@ -65,32 +65,32 @@
 
         <el-form-item label="mode: ">
           <el-select v-model="drawerEntity.mode" placeholder="请选择mode">
-            <el-option :value="MockModeEnums.NONE" label="无" />
-            <el-option :value="MockModeEnums.TIMER_JOB" label="定时任务" />
-            <el-option :value="MockModeEnums.DATE_RANGE" label="日期范围" />
-            <el-option :value="MockModeEnums.TS_RANGE" label="时间戳范围" />
+            <el-option :value="MockModeEnums.NONE" label="NONE" />
+            <el-option :value="MockModeEnums.TIMER_JOB" label="TIMER_JOB" />
+            <el-option :value="MockModeEnums.DATE_RANGE" label="DATE_RANGE" />
+            <el-option :value="MockModeEnums.TS_RANGE" label="TS_RANGE" />
           </el-select>
         </el-form-item>
         <el-form-item label="开始时间：">
-          <el-input v-model="drawerEntity.tsBegin" placeholder="开始时间"/>
+          <el-date-picker v-model="drawerEntity.tsBegin" type="datetime" placeholder="开始时间" :default-time="['00:00:00']" value-format="x"/>
         </el-form-item>
         <el-form-item label="结束时间(不包含)：">
-          <el-input v-model="drawerEntity.tsEnd" placeholder="结束时间"/>
+          <el-date-picker v-model="drawerEntity.tsEnd" type="datetime" placeholder="结束时间" :default-time="['00:00:00']" value-format="x"/>
         </el-form-item>
         <el-form-item label="子渠道数量">
-          <el-input v-model="drawerEntity.subChannelCount" placeholder="子渠道数量"/>
+          <el-input-number v-model="drawerEntity.subChannelCount" placeholder="子渠道数量" :controls="false"/>
         </el-form-item>
         <el-form-item label="每次最大注册数量">
-          <el-input v-model="drawerEntity.randomMaxRegistry" placeholder="每次最大注册数量"/>
+          <el-input-number v-model="drawerEntity.randomMaxRegistry" placeholder="每次最大注册数量" :controls="false"/>
         </el-form-item>
         <el-form-item label="每次最大登录数量">
-          <el-input v-model="drawerEntity.randomMaxLogin" placeholder="每次最大登录数量"/>
+          <el-input-number v-model="drawerEntity.randomMaxLogin" placeholder="每次最大登录数量" :controls="false"/>
         </el-form-item>
         <el-form-item label="每次最大充值数量">
-          <el-input v-model="drawerEntity.randomMaxRecharge" placeholder="每次最大充值数量"/>
+          <el-input-number v-model="drawerEntity.randomMaxRecharge" placeholder="每次最大充值数量" :controls="false"/>
         </el-form-item>
         <el-form-item label="每次最大提现数量">
-          <el-input v-model="drawerEntity.randomMaxWithdrawal" placeholder="每次最大提现数量"/>
+          <el-input-number v-model="drawerEntity.randomMaxWithdrawal" placeholder="每次最大提现数量" :controls="false"/>
         </el-form-item>
       </el-form>
     </template>
@@ -166,9 +166,9 @@ const formatMode = (row: MockPropertiesEntity, column: TableColumnCtx<MockProper
   return formatModeItem(mode)
 }
 
-const formatModeItem = (mode: MockModeEnums) => {
-  if (!mode) {
-    return '-';
+const formatModeItem = (mode?: MockModeEnums) => {
+  if (mode === undefined) {
+    return 'undefined'
   }
 
   let fmt: string = '-';
@@ -181,6 +181,9 @@ const formatModeItem = (mode: MockModeEnums) => {
       break
     case MockModeEnums.TS_RANGE:
       fmt = 'TS_RANGE';
+      break
+    case MockModeEnums.NONE:
+      fmt = 'NONE';
       break
     default:
       break
@@ -208,7 +211,7 @@ const formatTimestamp = (row: MockPropertiesEntity, column: TableColumnCtx<MockP
 
 const createEntity = async () => {
   await loadEnvList();
-  drawerEntity.value = {mode: MockModeEnums.NONE}
+  drawerEntity.value = {mode: MockModeEnums.NONE, tsBegin: 0, tsEnd: 0}
   drawerTitle.value = '新建'
   drawerEnable.value = true
 }
@@ -224,8 +227,17 @@ const drawerCancel = () => {
   drawerEnable.value = false
 }
 
-const drawerSave = () => {
+const drawerSave = async () => {
+  const result: ResponseBase = drawerEntity.value.id
+      ? await updateReq(drawerEntity.value)
+      : await createReq(drawerEntity.value);
+  if (result.code != 0) {
+    ElMessage({type: 'error', message: result.message})
+    return
+  }
+
   drawerEnable.value = false
+  await pageList();
 }
 
 // 翻页：pageNo
