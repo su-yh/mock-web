@@ -48,10 +48,21 @@
     <template #default>
       <el-form label-width="120px">
         <el-form-item label="env: ">
-          <template #default>
-            <el-input v-model="drawerEntity.env" placeholder="请输入env"/>
-          </template>
+          <el-select
+              v-model="drawerEntity.env"
+              placeholder="请选择env"
+              clearable
+              :disabled="envList.length === 0"
+          >
+            <el-option
+                v-for="envItem in envList"
+                :key="envItem.id"
+                :label="envItem.env"
+                :value="envItem.env"
+            />
+          </el-select>
         </el-form-item>
+
         <el-form-item label="mode: ">
           <el-select v-model="drawerEntity.mode" placeholder="请选择mode">
             <el-option :value="MockModeEnums.NONE" label="无" />
@@ -88,6 +99,8 @@ let pageResult = reactive<PageResult<MockPropertiesEntity>>({total: 0, list: []}
 let drawerEnable = ref<boolean>(false);
 let drawerTitle = ref<string>('');
 let drawerEntity = ref<MockPropertiesEntity>({});
+// env下拉列表数据
+const envList = ref<MockEnvConfigEntity[]>([]);
 
 const deleteItem = (entity: MockPropertiesEntity) => {
   console.log("删除: ", entity.id)
@@ -111,6 +124,21 @@ const pageList = async () => {
 
   pageResult.total = data.total;
   pageResult.list = data.list;
+}
+
+// 【新增】加载env下拉列表数据的通用函数
+const loadEnvList = async () => {
+  const result: ResponseBase<MockEnvConfigEntity[]> = await envListAllReq();
+  if (result.code != 0) {
+    envList.value = [];
+    ElMessage({
+      type: 'error',
+      message: result.message
+    });
+    return
+  }
+
+  envList.value = result.data;
 }
 
 const formatMode = (row: MockPropertiesEntity, column: TableColumnCtx<MockPropertiesEntity>, mode: MockModeEnums) => {
@@ -158,21 +186,14 @@ const formatTimestamp = (row: MockPropertiesEntity, column: TableColumnCtx<MockP
 };
 
 const createEntity = async () => {
+  await loadEnvList();
   drawerEntity.value = {mode: MockModeEnums.NONE}
   drawerTitle.value = '新建'
   drawerEnable.value = true
-
-
-  const result: ResponseBase<MockEnvConfigEntity[]> = await envListAllReq();
-  console.log(`result.code: ${result.code}, result.message: ${result.message}, result.data: ${result.data}`)
-
-  for (let i = 0; i < result.data.length; i++) {
-    const entity: MockEnvConfigEntity = result.data[i];
-    console.log(`i: ${i}, id: ${entity.id}, env: ${entity.env}`)
-  }
 }
 
-const editEntity = (editEntity: MockPropertiesEntity) => {
+const editEntity = async (editEntity: MockPropertiesEntity) => {
+  await loadEnvList();
   drawerEntity.value = {...editEntity}
   drawerTitle.value = '编辑'
   drawerEnable.value = true
