@@ -46,7 +46,7 @@
 
     <!-- 抽屉：正文 -->
     <template #default>
-      <el-form label-width="120px">
+      <el-form label-width="160px">
         <el-form-item label="env: ">
           <el-select
               v-model="drawerEntity.env"
@@ -70,6 +70,27 @@
             <el-option :value="MockModeEnums.DATE_RANGE" label="日期范围" />
             <el-option :value="MockModeEnums.TS_RANGE" label="时间戳范围" />
           </el-select>
+        </el-form-item>
+        <el-form-item label="开始时间：">
+          <el-input v-model="drawerEntity.tsBegin" placeholder="开始时间"/>
+        </el-form-item>
+        <el-form-item label="结束时间(不包含)：">
+          <el-input v-model="drawerEntity.tsEnd" placeholder="结束时间"/>
+        </el-form-item>
+        <el-form-item label="子渠道数量">
+          <el-input v-model="drawerEntity.subChannelCount" placeholder="子渠道数量"/>
+        </el-form-item>
+        <el-form-item label="每次最大注册数量">
+          <el-input v-model="drawerEntity.randomMaxRegistry" placeholder="每次最大注册数量"/>
+        </el-form-item>
+        <el-form-item label="每次最大登录数量">
+          <el-input v-model="drawerEntity.randomMaxLogin" placeholder="每次最大登录数量"/>
+        </el-form-item>
+        <el-form-item label="每次最大充值数量">
+          <el-input v-model="drawerEntity.randomMaxRecharge" placeholder="每次最大充值数量"/>
+        </el-form-item>
+        <el-form-item label="每次最大提现数量">
+          <el-input v-model="drawerEntity.randomMaxWithdrawal" placeholder="每次最大提现数量"/>
         </el-form-item>
       </el-form>
     </template>
