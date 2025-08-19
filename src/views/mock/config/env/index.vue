@@ -47,7 +47,7 @@
   </el-card>
 
   <!-- 抽屉：侧边栏 -->
-  <el-drawer v-model="drawer">
+  <el-drawer v-model="drawerEnable">
     <!-- 抽屉：标题 -->
     <template #header>
       {{ drawerTitle }}
@@ -93,7 +93,7 @@ import {ElMessage} from "element-plus";
 let pageParam = reactive<PageParams>({pageNo: 1, pageSize: 10});
 let pageResult = reactive<PageResult<MockEnvConfigEntity>>({total: 0, list: []});
 // 显示/隐藏抽屉
-let drawer = ref<boolean>(false);
+let drawerEnable = ref<boolean>(false);
 let drawerTitle = ref<string>('创建/编辑环境信息');
 let drawerEntity = ref<MockEnvConfigEntity>({env: '', enabled: true});
 
@@ -121,13 +121,13 @@ const resetDrawerEntity = () => {
 const createEnv = () => {
   resetDrawerEntity();
   drawerTitle.value = '创建环境'
-  drawer.value = true;
+  drawerEnable.value = true;
 }
 const editEnv = (row: MockEnvConfigEntity) => {
   drawerTitle.value = '编辑环境'
   resetDrawerEntity();
   drawerEntity.value = {...row}
-  drawer.value = true;
+  drawerEnable.value = true;
 }
 const deleteEnv = async (row: MockEnvConfigEntity) => {
   await deleteReq(row.id as string);
@@ -153,7 +153,7 @@ const sizeChangeHandle = async () => {
 
 // 抽屉：取消按钮
 const drawerCancel = async () => {
-  drawer.value = false  // 关闭抽屉
+  drawerEnable.value = false  // 关闭抽屉
 }
 // 抽屉：保存按钮
 const drawerSave = async () => {
@@ -169,7 +169,7 @@ const drawerSave = async () => {
   }
 
   await pageList();
-  drawer.value = false  // 关闭抽屉
+  drawerEnable.value = false  // 关闭抽屉
 }
 </script>
 
