@@ -3,6 +3,7 @@ import {ResponseBase, PageParams, PageResult} from "@/api/base/types";
 import {MockEnvConfigEntity} from "./types";
 
 enum API {
+  LIST_ALL_URL = '/platform/env/listAll',
   LIST_PAGE_URL = '/platform/env/listPage',
   CREATE_URL = '/platform/env/create',
   UPDATE_URL = '/platform/env/update',
@@ -10,6 +11,7 @@ enum API {
   STATUS_SWITCH_URL = '/platform/env/statusSwitch',
 }
 
+export const listAllReq = () => request.get<any, ResponseBase<MockEnvConfigEntity[]>>(API.LIST_ALL_URL)
 export const listPageReq = (pageParams: PageParams) => request.get<PageParams, ResponseBase<PageResult<MockEnvConfigEntity>>>(API.LIST_PAGE_URL, {params: pageParams});
 export const createReq = (entity: MockEnvConfigEntity) => request.post<MockEnvConfigEntity, ResponseBase>(API.CREATE_URL, entity);
 export const updateReq = (entity: MockEnvConfigEntity) => request.post<MockEnvConfigEntity, ResponseBase>(API.UPDATE_URL, entity);

@@ -1,9 +1,9 @@
 
 export enum MockModeEnums {
-  NONE,
-  TIMER_JOB,
-  DATE_RAGE,
-  TS_RANGE,
+  NONE = 0,
+  TIMER_JOB = 1,
+  DATE_RANGE = 2,
+  TS_RANGE = 3,
 }
 
 

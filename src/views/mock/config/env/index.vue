@@ -41,7 +41,7 @@
         :background="true"
         layout="prev, pager, next, jumper, ->, total, sizes"
         :total="pageResult.total"
-        @current-change="currentChangeHandler"
+        @current-change="currentChangeHandle"
         @size-change="sizeChangeHandle"
     />
   </el-card>
@@ -143,7 +143,7 @@ const handleStatusChange = async (row: MockEnvConfigEntity) => {
   await pageList();
 }
 // 翻页：pageNo
-const currentChangeHandler = async () => {
+const currentChangeHandle = async () => {
   await pageList();
 }
 // 每页条数：pageSize
