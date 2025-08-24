@@ -3,8 +3,8 @@
   <el-card>
     <el-button type="primary" @click="createEntity">新建</el-button>
     <el-table class="table" border :data="pageResult.list">
-      <el-table-column align="center" label="序号" type="index" width="80px"/>
-      <el-table-column align="center" label="env" prop="env"/>
+      <el-table-column align="center" label="序号" type="index" width="80px" fixed="left"/>
+      <el-table-column align="center" label="env" prop="env" width="100px" fixed="left"/>
       <el-table-column align="center" label="mode" prop="mode" :formatter="formatMode"/>
       <el-table-column align="center" label="开始时间" prop="tsBegin" :formatter="formatTimestamp"/>
       <el-table-column align="center" label="结束时间" prop="tsEnd" :formatter="formatTimestamp"/>
@@ -15,7 +15,7 @@
       <el-table-column align="center" label="每次最大提现数量" prop="randomMaxWithdrawal" width="120px"/>
       <el-table-column align="center" label="创建时间" prop="created" width="180px"/>
       <el-table-column align="center" label="修改时间" prop="updated" width="180px"/>
-      <el-table-column align="center" label="操作" width="200px">
+      <el-table-column align="center" label="操作" width="200px" fixed="right">
         <template #default="scope">
           <el-button type="primary" size="small" :icon="Edit" @click="editEntity(scope.row)">编辑</el-button>
           <el-popconfirm title="确定要删除这条记录吗？" @confirm="deleteItem(scope.row)">

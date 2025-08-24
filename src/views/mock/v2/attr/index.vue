@@ -6,7 +6,7 @@
   <el-card class="envCard">
     <div class="envSelect">
       <span>选择对应的环境： </span>
-      <el-select v-model="envEntity" placeholder="请选择" size="large">
+      <el-select style="width: 200px" v-model="envEntity" placeholder="请选择" size="large">
         <template #label>
           <span v-if="envEntity.env">{{envEntity.env}}(<span :style="{ color: envEntity.enabled ? 'blue' : 'red' }">{{envEntity.enabled ? '启用' : '禁用'}}</span>)</span>
         </template>

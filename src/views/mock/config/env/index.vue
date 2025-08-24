@@ -9,8 +9,8 @@
       <el-button type="primary" @click="pageList">搜索</el-button>
     </div>
     <el-table class="table" border :data="pageResult.list">
-      <el-table-column align="center" label="序号" type="index" width="80px"/>
-      <el-table-column align="center" label="env" prop="env" width="200px"/>
+      <el-table-column align="center" label="序号" type="index" width="80px" fixed="left"/>
+      <el-table-column align="center" label="env" prop="env" width="100px" fixed="left"/>
       <el-table-column align="center" label="描述" prop="description" />
       <el-table-column align="center" label="启用/禁用" prop="enabled" width="140px">
         <template #default="scope">
@@ -22,7 +22,7 @@
       </el-table-column>
       <el-table-column align="center" label="创建时间" prop="created" width="180px"/>
       <el-table-column align="center" label="修改时间" prop="updated" width="180px"/>
-      <el-table-column align="center" label="操作" width="280px">
+      <el-table-column align="center" label="操作" width="280px" fixed="right">
         <template #default="scope">
           <el-button type="primary" size="small" :icon="Edit" @click="editEnv(scope.row)">编辑</el-button>
           <el-popconfirm title="确定要删除这条记录吗？" @confirm="deleteEnv(scope.row)">

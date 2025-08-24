@@ -4,8 +4,8 @@
     <el-button type="primary" @click="createDataSource">新建</el-button>
     <!-- height: 200 参数，可以固定表头，这里的200 指的是表格内容区的大小，超过这个大小则会有垂直滚动条 -->
     <el-table class="table" border :data="pageResult.list" show-overflow-tooltip height="200">
-      <el-table-column align="center" label="序号" type="index" width="80px"/>
-      <el-table-column align="center" label="env" prop="env" width="200px"/>
+      <el-table-column align="center" label="序号" type="index" width="80px" fixed="left"/>
+      <el-table-column align="center" label="env" prop="env" width="100px" fixed="left"/>
       <el-table-column align="center" label="dataSourceName" prop="dataSourceName" width="200px"/>
       <el-table-column align="center" label="jdbcUrl" prop="jdbcUrl"/>
       <el-table-column align="center" label="username" prop="username"/>
@@ -18,7 +18,7 @@
       </el-table-column>
       <el-table-column align="center" label="created" prop="created" width="180px"/>
       <el-table-column align="center" label="updated" prop="updated" width="180px"/>
-      <el-table-column align="center" label="操作" width="200px">
+      <el-table-column align="center" label="操作" width="200px" fixed="right">
         <template #default="scope">
           <el-button type="primary" size="small" :icon="Edit" @click="editDataSource(scope.row)">编辑</el-button>
           <el-popconfirm title="确定要删除这条记录吗？" @confirm="deleteDataSource(scope.row)">
