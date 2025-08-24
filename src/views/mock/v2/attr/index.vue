@@ -6,9 +6,9 @@
   <el-card class="envCard">
     <div class="envSelect">
       <span>选择对应的环境： </span>
-      <el-select v-model="envEntity" placeholder="请选择" clearable size="large">
-        <template #label="">
-          <span>{{envEntity.env}}(<span :style="{ color: envEntity.enabled ? 'blue' : 'red' }">{{envEntity.enabled ? '启用' : '禁用'}}</span>)</span>
+      <el-select v-model="envEntity" placeholder="请选择" size="large">
+        <template #label>
+          <span v-if="envEntity.env">{{envEntity.env}}(<span :style="{ color: envEntity.enabled ? 'blue' : 'red' }">{{envEntity.enabled ? '启用' : '禁用'}}</span>)</span>
         </template>
         <el-option v-for="envItem in envList" :key="envItem.id" :value="envItem">
           <span>{{ envItem.env }}(<span :style="{ color: envItem.enabled ? 'blue' : 'red' }">{{envItem.enabled ? '启用' : '禁用'}}</span>)</span>
@@ -40,7 +40,7 @@ import {ElMessage} from "element-plus";
 // 所有的env 环境列表数据
 const envList = ref<MockEnvConfigEntity[]>([])
 // 选中的env 环境数据
-const envEntity = ref<MockEnvConfigEntity>({env: '无', enabled: false})
+const envEntity = ref<MockEnvConfigEntity>({env: '', enabled: false})
 
 onMounted(async () => {
   const result: ResponseBase<MockEnvConfigEntity[]> = await listAllReq();
