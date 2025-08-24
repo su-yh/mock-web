@@ -94,7 +94,7 @@ const constantRoutes: RouteRecordRaw[] = [
     meta: {
       title: 'Data Mock Test',
       isMenu: true,
-      hidden: true,
+      hidden: false,
       icon: 'Promotion',
     },
     children: [
@@ -187,6 +187,39 @@ const constantRoutes: RouteRecordRaw[] = [
           hidden: false,
           icon: "monitor",
         },
+      }
+    ]
+  }, {
+    path: RoutePaths.MOCK_CONFIG,
+    component: () => import('@/layout/index.vue'),
+    name: 'Mock_v2',
+    meta: {
+      title: 'Data Mock V2',
+      isMenu: true,
+      hidden: false,
+      icon: 'Promotion',
+    },
+    children: [
+      {
+        path: RoutePaths.MOCK_CONFIG_ENV_V2,
+        component: () => import('@/views/mock/config/env/index.vue'),
+        name: 'MockConfigV2Env',
+        meta: {
+          title: 'MockConfigV2Env',
+          isMenu: true,
+          hidden: false,
+          icon: "monitor",
+        },
+      }, {
+        path: RoutePaths.MOCK_CONFIG_V2_ATTR,
+        component: () => import('@/views/mock/v2/attr/index.vue'),
+        name: 'MockConfigAttr',
+        meta: {
+          title: 'MockConfigAttr',
+          isMenu: true,
+          hidden: false,
+          icon: 'monitor',
+        }
       }
     ]
   }, {
