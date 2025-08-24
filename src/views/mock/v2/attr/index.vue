@@ -25,7 +25,7 @@
         <el-card shadow="always">
           <el-form label-width="160px">
             <el-form-item label="mode: ">
-              <el-select v-model="tabData.platformEntity.mode" placeholder="请选择mode">
+              <el-select style="width: 200px" v-model="tabData.platformEntity.mode" clearable placeholder="请选择mode">
                 <el-option :value="MockModeEnums.NONE" label="NONE" />
                 <el-option :value="MockModeEnums.TIMER_JOB" label="TIMER_JOB" />
                 <el-option :value="MockModeEnums.DATE_RANGE" label="DATE_RANGE" />
@@ -77,6 +77,7 @@ import {listAllReq} from "@/api/mock/config/env";
 import {ResponseBase} from "@/api/base/types";
 import {ElMessage} from "element-plus";
 import {MockModeEnums, MockPropertiesEntity} from "@/api/mock/config/platform/types";
+import {queryPlatformByEnvReq} from "@/api/mock/config/platform";
 
 enum TabNameEnum {
   Platform = 'MockConfigPlatform',
@@ -86,9 +87,9 @@ enum TabNameEnum {
 
 interface TabData {
   activeTabName: TabNameEnum, // 当前选中的标签页
-  platformEntity?: MockPropertiesEntity,  // platform 标签数据
-  dataSourceEntity?: any, // datasource 标签数据
-  rabbitMqEntity?: any,  // rabbitmq 标签数据
+  platformEntity: MockPropertiesEntity,  // platform 标签数据
+  dataSourceEntity: any, // datasource 标签数据
+  rabbitMqEntity: any,  // rabbitmq 标签数据
 }
 
 // 所有的env 环境列表数据
@@ -96,7 +97,7 @@ const envList = ref<MockEnvConfigEntity[]>([])
 // 选中的env 环境数据
 const envEntity = ref<MockEnvConfigEntity>({env: '', enabled: false})
 // tabs 标签页相关的数据属性对象
-let tabData = reactive<TabData>({activeTabName: TabNameEnum.Platform})
+let tabData = reactive<TabData>({activeTabName: TabNameEnum.Platform, platformEntity: {}})
 
 onMounted(async () => {
   const result: ResponseBase<MockEnvConfigEntity[]> = await listAllReq();
@@ -112,9 +113,12 @@ const handleTabChange = async (tabName: TabNameEnum) => {
   console.log("current table name: ", tabName)
   switch (tabName) {
     case TabNameEnum.Platform:
-      // TODO: suyh - 初始化 platformEntity 的值，通过API 去请求数据
-      console.log('处理平台配置逻辑')
-      tabData.platformEntity = {}
+      const result: ResponseBase<MockPropertiesEntity> = await queryPlatformByEnvReq(envEntity.value.env);
+      if (result.code != 0) {
+        ElMessage({type: 'error', message: result.message})
+        return
+      }
+      tabData.platformEntity = result.data ? result.data : {}
       break
     case TabNameEnum.DataSource:
       console.log('处理数据源配置逻辑')

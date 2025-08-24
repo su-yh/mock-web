@@ -19,6 +19,14 @@ request.interceptors.response.use(response => {
   // console.log("data.data: ", response.data.data)
   return response.data;
 }, error => {
+  if (!error.response) {
+    ElMessage({
+      type: 'error',
+      message: "请求异常：" + error.message
+    })
+    return
+  }
+
   let msg = '';
   let status = error.response.status;
   switch (status) {
