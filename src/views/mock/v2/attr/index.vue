@@ -219,7 +219,7 @@
                 <el-input v-model="tabData.rabbitMqEntity.updated" disabled/>
               </template>
             </el-form-item>
-            <el-button type="primary">保存</el-button>
+            <el-button type="primary" @click="saveRabbitMq">保存</el-button>
           </el-form>
         </el-card>
       </el-tab-pane>
@@ -239,7 +239,7 @@ import {queryPlatformByEnvReq} from "@/api/mock/config/platform";
 import {queryDataSourceByEnvReq} from '@/api/mock/config/datasource'
 import {DataSourceEnums, EnvDatasourcePropertiesEntity} from "@/api/mock/config/datasource/types";
 import {EnvRabbitmqPropertiesEntity} from "@/api/mock/config/rabbitmq/types";
-import {queryRabbitMqEntityByEnv, switchRabbitMqEnableDisable} from "@/api/mock/config/rabbitmq";
+import {queryRabbitMqEntityByEnv, switchRabbitMqEnableDisable, createReq as createRabbitMqReq, updateReq as updateRabbitMqReq} from "@/api/mock/config/rabbitmq";
 
 enum TabNameEnum {
   Platform = 'MockConfigPlatform',
@@ -286,48 +286,56 @@ onMounted(async () => {
 const handleTabChange = async (tabName: TabNameEnum = tabData.activeTabName) => {
   switch (tabName) {
     case TabNameEnum.Platform:  // 环境平台属性相关处理
-    {
-      const result: ResponseBase<MockPropertiesEntity> = await queryPlatformByEnvReq(envEntity.value.env);
-      if (result.code != 0) {
-        ElMessage({type: 'error', message: result.message})
-        return
-      }
-      tabData.platformEntity = result.data ? result.data : {}
-    }
+     await reloadPlatformEntity();
       break
 
     case TabNameEnum.DataSource:  // 数据源的相关处理
-    {
-      const result: ResponseBase<EnvDatasourcePropertiesEntity> = await queryDataSourceByEnvReq(envEntity.value.env, DataSourceEnums.FLINK_CDS);
-      if (result.code != 0) {
-        ElMessage({type: 'error', message: result.message})
-        return
-      }
-      tabData.dataSources.flinkCds = result.data ? result.data : {dataSourceName: DataSourceEnums.FLINK_CDS}
-    }
-    {
-      const result: ResponseBase<EnvDatasourcePropertiesEntity> = await queryDataSourceByEnvReq(envEntity.value.env, DataSourceEnums.FLINK_PG_CDAP);
-      if (result.code != 0) {
-        ElMessage({type: 'error', message: result.message})
-        return
-      }
-      tabData.dataSources.flinkPgCdap = result.data ? result.data : {dataSourceName: DataSourceEnums.FLINK_PG_CDAP}
-    }
+      await reloadDataSourceEntities();
       break
 
     case TabNameEnum.RabbitMq:  // rabbitmq 配置属性相关处理
-    {
-      const result: ResponseBase<EnvRabbitmqPropertiesEntity> = await queryRabbitMqEntityByEnv(envEntity.value.env)
-      if (result.code != 0) {
-        ElMessage({type: 'error', message: result.message})
-        return
-      }
-      tabData.rabbitMqEntity = result.data ? result.data : {}
-    }
+      await reloadRabbitMqEntity();
       break
     default:
         break
   }
+}
+
+const reloadPlatformEntity = async () => {
+  const result: ResponseBase<MockPropertiesEntity> = await queryPlatformByEnvReq(envEntity.value.env);
+  if (result.code != 0) {
+    ElMessage({type: 'error', message: result.message})
+    return
+  }
+  tabData.platformEntity = result.data ? result.data : {}
+}
+
+const reloadDataSourceEntities = async () => {
+  {
+    const result: ResponseBase<EnvDatasourcePropertiesEntity> = await queryDataSourceByEnvReq(envEntity.value.env, DataSourceEnums.FLINK_CDS);
+    if (result.code != 0) {
+      ElMessage({type: 'error', message: result.message})
+      return
+    }
+    tabData.dataSources.flinkCds = result.data ? result.data : {dataSourceName: DataSourceEnums.FLINK_CDS}
+  }
+  {
+    const result: ResponseBase<EnvDatasourcePropertiesEntity> = await queryDataSourceByEnvReq(envEntity.value.env, DataSourceEnums.FLINK_PG_CDAP);
+    if (result.code != 0) {
+      ElMessage({type: 'error', message: result.message})
+      return
+    }
+    tabData.dataSources.flinkPgCdap = result.data ? result.data : {dataSourceName: DataSourceEnums.FLINK_PG_CDAP}
+  }
+}
+
+const reloadRabbitMqEntity = async () => {
+  const result: ResponseBase<EnvRabbitmqPropertiesEntity> = await queryRabbitMqEntityByEnv(envEntity.value.env)
+  if (result.code != 0) {
+    ElMessage({type: 'error', message: result.message})
+    return
+  }
+  tabData.rabbitMqEntity = result.data ? result.data : {env: envEntity.value.env}
 }
 
 const envChangeHandle = async (envItem: MockEnvConfigEntity) => {
@@ -349,7 +357,21 @@ const switchRabbitMqStatus = async () => {
     return
   }
 
-  await handleTabChange();
+  await reloadRabbitMqEntity();
+}
+
+const saveRabbitMq = async () => {
+  // if (!tabData.rabbitMqEntity.id) {
+  //   // 创建时env 是没有值的
+  //   tabData.rabbitMqEntity.env = envEntity.value.env
+  // }
+  const result: ResponseBase = tabData.rabbitMqEntity.id ? await createRabbitMqReq(tabData.rabbitMqEntity) : await updateRabbitMqReq(tabData.rabbitMqEntity);
+  if (result.code != 0) {
+    ElMessage({type: 'error', message: result.message})
+    return
+  }
+
+  await reloadRabbitMqEntity();
 }
 
 </script>
