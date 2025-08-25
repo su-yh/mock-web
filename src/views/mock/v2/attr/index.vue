@@ -145,8 +145,83 @@
       </el-tab-pane>
 
       <el-tab-pane :label="TabNameEnum.RabbitMq" :name="TabNameEnum.RabbitMq">
-        <!-- TODO: suyh - 这里配置RabbitMQ -->
-        这里配置RabbitMQ
+        <span>生成的mock 数据写到rabbitmq 中的相关配置</span>
+        <!-- RabbitMQ -->
+        <el-card style="margin-top: 10px">
+          <el-form label-width="160px">
+            <el-form-item label="env: ">
+              <template #default>
+                <el-input v-model="tabData.rabbitMqEntity.env" disabled/>
+              </template>
+            </el-form-item>
+            <el-form-item label="enabled: ">
+              <template #default>
+                <el-switch v-model="tabData.rabbitMqEntity.enabled" @change="switchRabbitMqStatus"/>
+              </template>
+            </el-form-item>
+            <el-form-item label="host: ">
+              <template #default>
+                <el-input v-model="tabData.rabbitMqEntity.host" placeholder="请输入host"/>
+              </template>
+            </el-form-item>
+            <el-form-item label="port: ">
+              <template #default>
+                <el-input-number v-model="tabData.rabbitMqEntity.port" :controls="false" placeholder="请输入port"/>
+              </template>
+            </el-form-item>
+            <el-form-item label="username: ">
+              <template #default>
+                <el-input v-model="tabData.rabbitMqEntity.username" placeholder="请输入username"/>
+              </template>
+            </el-form-item>
+            <el-form-item label="password: ">
+              <template #default>
+                <el-input v-model="tabData.rabbitMqEntity.password" placeholder="请输入password"/>
+              </template>
+            </el-form-item>
+            <el-form-item label="virtualHost: ">
+              <template #default>
+                <el-input v-model="tabData.rabbitMqEntity.virtualHost" placeholder="请输入virtualHost"/>
+              </template>
+            </el-form-item>
+            <el-form-item label="exchange: ">
+              <template #default>
+                <el-input v-model="tabData.rabbitMqEntity.exchange" placeholder="请输入exchange"/>
+              </template>
+            </el-form-item>
+            <el-form-item label="routingKeyRegistry: ">
+              <template #default>
+                <el-input v-model="tabData.rabbitMqEntity.routingKeyRegistry" placeholder="请输入routingKeyRegistry"/>
+              </template>
+            </el-form-item>
+            <el-form-item label="routingKeyLogin: ">
+              <template #default>
+                <el-input v-model="tabData.rabbitMqEntity.routingKeyLogin" placeholder="请输入routingKeyLogin"/>
+              </template>
+            </el-form-item>
+            <el-form-item label="routingKeyRecharge: ">
+              <template #default>
+                <el-input v-model="tabData.rabbitMqEntity.routingKeyRecharge" placeholder="请输入routingKeyRecharge"/>
+              </template>
+            </el-form-item>
+            <el-form-item label="routingKeyWithdrawal: ">
+              <template #default>
+                <el-input v-model="tabData.rabbitMqEntity.routingKeyWithdrawal" placeholder="请输入routingKeyWithdrawal"/>
+              </template>
+            </el-form-item>
+            <el-form-item label="created: ">
+              <template #default>
+                <el-input v-model="tabData.rabbitMqEntity.created" disabled/>
+              </template>
+            </el-form-item>
+            <el-form-item label="updated: ">
+              <template #default>
+                <el-input v-model="tabData.rabbitMqEntity.updated" disabled/>
+              </template>
+            </el-form-item>
+            <el-button type="primary">保存</el-button>
+          </el-form>
+        </el-card>
       </el-tab-pane>
     </el-tabs>
   </el-card>
@@ -163,6 +238,8 @@ import {MockModeEnums, MockPropertiesEntity} from "@/api/mock/config/platform/ty
 import {queryPlatformByEnvReq} from "@/api/mock/config/platform";
 import {queryDataSourceByEnvReq} from '@/api/mock/config/datasource'
 import {DataSourceEnums, EnvDatasourcePropertiesEntity} from "@/api/mock/config/datasource/types";
+import {EnvRabbitmqPropertiesEntity} from "@/api/mock/config/rabbitmq/types";
+import {queryRabbitMqEntityByEnv, switchRabbitMqEnableDisable} from "@/api/mock/config/rabbitmq";
 
 enum TabNameEnum {
   Platform = 'MockConfigPlatform',
@@ -178,7 +255,7 @@ interface TabData {
     flinkCds: EnvDatasourcePropertiesEntity,
     flinkPgCdap: EnvDatasourcePropertiesEntity
   },
-  rabbitMqEntity: any,  // rabbitmq 标签数据
+  rabbitMqEntity: EnvRabbitmqPropertiesEntity,  // rabbitmq 标签数据
 }
 
 // 所有的env 环境列表数据
@@ -192,7 +269,8 @@ let tabData = reactive<TabData>({
   dataSources: {
     flinkCds: {},
     flinkPgCdap: {},
-  }
+  },
+  rabbitMqEntity: {env: envEntity.value.env}
 })
 
 onMounted(async () => {
@@ -205,18 +283,20 @@ onMounted(async () => {
   envList.value = result.data
 })
 
-const handleTabChange = async (tabName: TabNameEnum) => {
-  console.log("current table name: ", tabName)
+const handleTabChange = async (tabName: TabNameEnum = tabData.activeTabName) => {
   switch (tabName) {
-    case TabNameEnum.Platform:
+    case TabNameEnum.Platform:  // 环境平台属性相关处理
+    {
       const result: ResponseBase<MockPropertiesEntity> = await queryPlatformByEnvReq(envEntity.value.env);
       if (result.code != 0) {
         ElMessage({type: 'error', message: result.message})
         return
       }
       tabData.platformEntity = result.data ? result.data : {}
+    }
       break
-    case TabNameEnum.DataSource:
+
+    case TabNameEnum.DataSource:  // 数据源的相关处理
     {
       const result: ResponseBase<EnvDatasourcePropertiesEntity> = await queryDataSourceByEnvReq(envEntity.value.env, DataSourceEnums.FLINK_CDS);
       if (result.code != 0) {
@@ -234,8 +314,16 @@ const handleTabChange = async (tabName: TabNameEnum) => {
       tabData.dataSources.flinkPgCdap = result.data ? result.data : {dataSourceName: DataSourceEnums.FLINK_PG_CDAP}
     }
       break
-    case TabNameEnum.RabbitMq:
-      console.log('处理RabbitMQ配置逻辑')
+
+    case TabNameEnum.RabbitMq:  // rabbitmq 配置属性相关处理
+    {
+      const result: ResponseBase<EnvRabbitmqPropertiesEntity> = await queryRabbitMqEntityByEnv(envEntity.value.env)
+      if (result.code != 0) {
+        ElMessage({type: 'error', message: result.message})
+        return
+      }
+      tabData.rabbitMqEntity = result.data ? result.data : {}
+    }
       break
     default:
         break
@@ -248,6 +336,20 @@ const envChangeHandle = async (envItem: MockEnvConfigEntity) => {
   // 当前选中的env 环境，通过该环境去查询对应的配置数据项
 
   await handleTabChange(tabData.activeTabName);
+}
+
+const switchRabbitMqStatus = async () => {
+  if (!tabData.rabbitMqEntity.id) {
+    return
+  }
+
+  const result: ResponseBase = await switchRabbitMqEnableDisable(tabData.rabbitMqEntity.id, tabData.rabbitMqEntity.enabled as boolean);
+  if (result.code != 0) {
+    ElMessage({type: 'error', message: result.message})
+    return
+  }
+
+  await handleTabChange();
 }
 
 </script>
