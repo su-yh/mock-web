@@ -25,8 +25,13 @@
       <el-tab-pane :label="TabNameEnum.Platform" :name="TabNameEnum.Platform">
         <el-card shadow="always">
           <el-form label-width="160px">
+            <el-form-item label="环境: ">
+              <template #default>
+                <el-input v-model="tabData.platformEntity.env" disabled/>
+              </template>
+            </el-form-item>
             <el-form-item label="mode: ">
-              <el-select style="width: 200px" v-model="tabData.platformEntity.mode" clearable placeholder="请选择mode">
+              <el-select style="width: 200px" v-model="tabData.platformEntity.mode" placeholder="请选择mode">
                 <el-option :value="MockModeEnums.NONE" label="NONE" />
                 <el-option :value="MockModeEnums.TIMER_JOB" label="TIMER_JOB" />
                 <el-option :value="MockModeEnums.DATE_RANGE" label="DATE_RANGE" />
@@ -54,9 +59,18 @@
             <el-form-item label="每次最大提现数量">
               <el-input-number v-model="tabData.platformEntity.randomMaxWithdrawal" placeholder="每次最大提现数量" :controls="false"/>
             </el-form-item>
+            <el-form-item label="created: ">
+              <template #default>
+                <el-input v-model="tabData.platformEntity.created" disabled/>
+              </template>
+            </el-form-item>
+            <el-form-item label="updated: ">
+              <template #default>
+                <el-input v-model="tabData.platformEntity.updated" disabled/>
+              </template>
+            </el-form-item>
 
-            <!-- TODO: suyh - 保存，更新或者创建 -->
-            <el-button type="primary" size="large">保存</el-button>
+            <el-button type="primary" size="large" @click="savePlatform">保存</el-button>
           </el-form>
         </el-card>
       </el-tab-pane>
@@ -66,6 +80,11 @@
         <!-- 数据源：flinkCds -->
         <el-card>
           <el-form label-width="120px">
+            <el-form-item label="环境: ">
+              <template #default>
+                <el-input v-model="tabData.dataSources.flinkCds.env" disabled/>
+              </template>
+            </el-form-item>
             <el-form-item label="dataSourceName: ">
               <template #default>
                 <el-input v-model="tabData.dataSources.flinkCds.dataSourceName" disabled/>
@@ -99,13 +118,29 @@
                 <el-switch v-model="tabData.dataSources.flinkCds.flywayEnabled"/>
               </template>
             </el-form-item>
-            <el-button type="primary">保存</el-button>
+            <el-form-item label="created: ">
+              <template #default>
+                <el-input v-model="tabData.dataSources.flinkCds.created" disabled/>
+              </template>
+            </el-form-item>
+            <el-form-item label="updated: ">
+              <template #default>
+                <el-input v-model="tabData.dataSources.flinkCds.updated" disabled/>
+              </template>
+            </el-form-item>
+
+            <el-button type="primary" @click="saveDataSourceCds">保存</el-button>
           </el-form>
         </el-card>
 
         <!-- 数据源：flinkPgCdap -->
         <el-card style="margin-top: 10px">
           <el-form label-width="120px">
+            <el-form-item label="环境: ">
+              <template #default>
+                <el-input v-model="tabData.dataSources.flinkPgCdap.env" disabled/>
+              </template>
+            </el-form-item>
             <el-form-item label="dataSourceName: ">
               <template #default>
                 <el-input v-model="tabData.dataSources.flinkPgCdap.dataSourceName" disabled/>
@@ -139,7 +174,18 @@
                 <el-switch v-model="tabData.dataSources.flinkPgCdap.flywayEnabled"/>
               </template>
             </el-form-item>
-            <el-button type="primary">保存</el-button>
+            <el-form-item label="created: ">
+              <template #default>
+                <el-input v-model="tabData.dataSources.flinkPgCdap.created" disabled/>
+              </template>
+            </el-form-item>
+            <el-form-item label="updated: ">
+              <template #default>
+                <el-input v-model="tabData.dataSources.flinkPgCdap.updated" disabled/>
+              </template>
+            </el-form-item>
+
+            <el-button type="primary" @click="saveDataSourcePgCdap">保存</el-button>
           </el-form>
         </el-card>
       </el-tab-pane>
@@ -149,7 +195,7 @@
         <!-- RabbitMQ -->
         <el-card style="margin-top: 10px">
           <el-form label-width="160px">
-            <el-form-item label="env: ">
+            <el-form-item label="环境: ">
               <template #default>
                 <el-input v-model="tabData.rabbitMqEntity.env" disabled/>
               </template>
@@ -219,6 +265,7 @@
                 <el-input v-model="tabData.rabbitMqEntity.updated" disabled/>
               </template>
             </el-form-item>
+
             <el-button type="primary" @click="saveRabbitMq">保存</el-button>
           </el-form>
         </el-card>
@@ -235,8 +282,8 @@ import {listAllReq} from "@/api/mock/config/env";
 import {ResponseBase} from "@/api/base/types";
 import {ElMessage} from "element-plus";
 import {MockModeEnums, MockPropertiesEntity} from "@/api/mock/config/platform/types";
-import {queryPlatformByEnvReq} from "@/api/mock/config/platform";
-import {queryDataSourceByEnvReq} from '@/api/mock/config/datasource'
+import {queryPlatformByEnvReq, createReq as createPlatformReq, updateReq as updatePlatformReq} from "@/api/mock/config/platform";
+import {queryDataSourceByEnvReq, createReq as createDataSourceReq, updateReq as updateDataSourceReq} from '@/api/mock/config/datasource'
 import {DataSourceEnums, EnvDatasourcePropertiesEntity} from "@/api/mock/config/datasource/types";
 import {EnvRabbitmqPropertiesEntity} from "@/api/mock/config/rabbitmq/types";
 import {queryRabbitMqEntityByEnv, switchRabbitMqEnableDisable, createReq as createRabbitMqReq, updateReq as updateRabbitMqReq} from "@/api/mock/config/rabbitmq";
@@ -307,7 +354,7 @@ const reloadPlatformEntity = async () => {
     ElMessage({type: 'error', message: result.message})
     return
   }
-  tabData.platformEntity = result.data ? result.data : {}
+  tabData.platformEntity = result.data ? result.data : {env: envEntity.value.env, mode: MockModeEnums.NONE}
 }
 
 const reloadDataSourceEntities = async () => {
@@ -317,7 +364,7 @@ const reloadDataSourceEntities = async () => {
       ElMessage({type: 'error', message: result.message})
       return
     }
-    tabData.dataSources.flinkCds = result.data ? result.data : {dataSourceName: DataSourceEnums.FLINK_CDS}
+    tabData.dataSources.flinkCds = result.data ? result.data : {env: envEntity.value.env, dataSourceName: DataSourceEnums.FLINK_CDS}
   }
   {
     const result: ResponseBase<EnvDatasourcePropertiesEntity> = await queryDataSourceByEnvReq(envEntity.value.env, DataSourceEnums.FLINK_PG_CDAP);
@@ -325,7 +372,7 @@ const reloadDataSourceEntities = async () => {
       ElMessage({type: 'error', message: result.message})
       return
     }
-    tabData.dataSources.flinkPgCdap = result.data ? result.data : {dataSourceName: DataSourceEnums.FLINK_PG_CDAP}
+    tabData.dataSources.flinkPgCdap = result.data ? result.data : {env: envEntity.value.env, dataSourceName: DataSourceEnums.FLINK_PG_CDAP}
   }
 }
 
@@ -335,7 +382,7 @@ const reloadRabbitMqEntity = async () => {
     ElMessage({type: 'error', message: result.message})
     return
   }
-  tabData.rabbitMqEntity = result.data ? result.data : {env: envEntity.value.env}
+  tabData.rabbitMqEntity = result.data ? result.data : {env: envEntity.value.env, enabled: false, port: 5672}
 }
 
 const envChangeHandle = async (envItem: MockEnvConfigEntity) => {
@@ -360,12 +407,46 @@ const switchRabbitMqStatus = async () => {
   await reloadRabbitMqEntity();
 }
 
+const savePlatform = async () => {
+  const result: ResponseBase = tabData.platformEntity.id
+      ? await updatePlatformReq(tabData.platformEntity)
+      : await createPlatformReq(tabData.platformEntity);
+  if (result.code != 0) {
+    ElMessage({type: 'error', message: result.message})
+    return
+  }
+
+  await reloadPlatformEntity();
+}
+
+const saveDataSourceCds = async () => {
+  await saveDataSource(tabData.dataSources.flinkCds)
+}
+
+const saveDataSourcePgCdap = async () => {
+  await saveDataSource(tabData.dataSources.flinkPgCdap)
+}
+
+const saveDataSource = async (dataSourceEntity: EnvDatasourcePropertiesEntity) => {
+  const result: ResponseBase = dataSourceEntity.id
+      ? await updateDataSourceReq(dataSourceEntity)
+      : await createDataSourceReq(dataSourceEntity);
+  if (result.code != 0) {
+    ElMessage({type: 'error', message: result.message})
+    return
+  }
+
+  await reloadDataSourceEntities();
+}
+
 const saveRabbitMq = async () => {
   // if (!tabData.rabbitMqEntity.id) {
   //   // 创建时env 是没有值的
   //   tabData.rabbitMqEntity.env = envEntity.value.env
   // }
-  const result: ResponseBase = tabData.rabbitMqEntity.id ? await createRabbitMqReq(tabData.rabbitMqEntity) : await updateRabbitMqReq(tabData.rabbitMqEntity);
+  const result: ResponseBase = tabData.rabbitMqEntity.id
+      ? await updateRabbitMqReq(tabData.rabbitMqEntity)
+      : await createRabbitMqReq(tabData.rabbitMqEntity);
   if (result.code != 0) {
     ElMessage({type: 'error', message: result.message})
     return
