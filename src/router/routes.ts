@@ -1,6 +1,21 @@
 import type {RouteRecordRaw} from "vue-router";
 import RoutePaths from '@/router/routePathConstants'
 
+import 'vue-router'
+
+// 扩展 RouteMeta 接口
+// 扩展后，在定义路由时就能获得对应的类型提示和校验
+declare module 'vue-router' {
+  interface RouteMeta {
+    title: string;
+    isMenu: boolean;
+    icon: string;
+    hidden: boolean;
+    // 其他自定义属性
+    [key: string]: any; // 允许添加其他任意属性
+  }
+}
+
 const constantRoutes: RouteRecordRaw[] = [
   {
     path: RoutePaths.ROOT,
@@ -11,6 +26,7 @@ const constantRoutes: RouteRecordRaw[] = [
       title: '根',
       isMenu: false,
       icon: "Promotion",
+      hidden: true,
     },
     children: [
       {
@@ -20,8 +36,8 @@ const constantRoutes: RouteRecordRaw[] = [
         meta: {
           title: '主页',
           isMenu: true,
-          hidden: false,
           icon: "Promotion",
+          hidden: false,
         },
       }
     ]
@@ -33,6 +49,7 @@ const constantRoutes: RouteRecordRaw[] = [
       title: '登录',
       isMenu: false,
       icon: "Promotion",
+      hidden: true,
     }
   }, {
     path: RoutePaths.SCREEN,
@@ -41,8 +58,8 @@ const constantRoutes: RouteRecordRaw[] = [
     meta: {
       title: '数据大屏',
       isMenu: true,
-      hidden: true,
       icon: "Platform",
+      hidden: true,
     }
   }, {
     path: RoutePaths.ACL,
@@ -51,8 +68,8 @@ const constantRoutes: RouteRecordRaw[] = [
     meta: {
       title: '权限管理',
       isMenu: true,
-      hidden: false,
       icon: "Lock",
+      hidden: false,
     },
     children: [
       {
@@ -62,8 +79,8 @@ const constantRoutes: RouteRecordRaw[] = [
         meta: {
           title: '用户管理',
           isMenu: true,
-          hidden: false,
           icon: "User",
+          hidden: false,
         },
       }, {
         path: RoutePaths.ACL_ROLE,
@@ -72,8 +89,8 @@ const constantRoutes: RouteRecordRaw[] = [
         meta: {
           title: '角色管理',
           isMenu: true,
-          hidden: false,
           icon: "UserFilled",
+          hidden: false,
         },
       }, {
         path: RoutePaths.ACL_PERMISSION,
@@ -82,8 +99,8 @@ const constantRoutes: RouteRecordRaw[] = [
         meta: {
           title: '菜单管理',
           isMenu: true,
-          hidden: false,
           icon: "Monitor",
+          hidden: false,
         },
       }
     ]
@@ -94,8 +111,8 @@ const constantRoutes: RouteRecordRaw[] = [
     meta: {
       title: 'Data Mock Test',
       isMenu: true,
-      hidden: false,
       icon: 'Promotion',
+      hidden: false,
     },
     children: [
       {
@@ -106,8 +123,8 @@ const constantRoutes: RouteRecordRaw[] = [
         meta: {
           title: 'Mock管理',
           isMenu: true,
+          icon: 'Folder',
           hidden: false,
-          icon: 'Folder'
         },
         children: [
           // 将原来的Mock Temp移动到中间目录下
@@ -118,8 +135,8 @@ const constantRoutes: RouteRecordRaw[] = [
             meta: {
               title: '临时占位菜单',
               isMenu: true,
+              icon: 'Promotion',
               hidden: false,
-              icon: 'Promotion'
             }
           }
           // 可以在这里添加更多子路由
@@ -131,8 +148,8 @@ const constantRoutes: RouteRecordRaw[] = [
         meta: {
           title: 'Yaml',
           isMenu: true,
-          hidden: false,
           icon: "monitor",
+          hidden: false,
         }
       }
     ]
@@ -143,8 +160,8 @@ const constantRoutes: RouteRecordRaw[] = [
     meta: {
       title: 'Data Mock',
       isMenu: true,
-      hidden: false,
       icon: 'Promotion',
+      hidden: false,
     },
     children: [
       {
@@ -154,8 +171,8 @@ const constantRoutes: RouteRecordRaw[] = [
         meta: {
           title: 'MockConfigEnv',
           isMenu: true,
-          hidden: false,
           icon: "monitor",
+          hidden: false,
         }
       }, {
         path: RoutePaths.MOCK_CONFIG_PLATFORM,
@@ -164,8 +181,8 @@ const constantRoutes: RouteRecordRaw[] = [
         meta: {
           title: 'MockConfigPlatform',
           isMenu: true,
-          hidden: false,
           icon: "monitor",
+          hidden: false,
         },
       }, {
         path: RoutePaths.MOCK_CONFIG_DATASOURCE,
@@ -174,8 +191,8 @@ const constantRoutes: RouteRecordRaw[] = [
         meta: {
           title: 'MockConfigDataSource',
           isMenu: true,
-          hidden: false,
           icon: "monitor",
+          hidden: false,
         },
       }, {
         path: RoutePaths.MOCK_CONFIG_RABBITMQ,
@@ -184,8 +201,8 @@ const constantRoutes: RouteRecordRaw[] = [
         meta: {
           title: 'MockConfigRabbitmq',
           isMenu: true,
-          hidden: false,
           icon: "monitor",
+          hidden: false,
         },
       }
     ]
@@ -230,6 +247,7 @@ const constantRoutes: RouteRecordRaw[] = [
       title: '404',
       isMenu: false,
       icon: "Promotion",
+      hidden: true,
     }
   }, {
     path: RoutePaths.OTHER,
@@ -239,6 +257,7 @@ const constantRoutes: RouteRecordRaw[] = [
       title: 'any',
       isMenu: false,
       icon: "Promotion",
+      hidden: true,
     }
   }
 ];
