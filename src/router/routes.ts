@@ -153,59 +153,59 @@ const constantRoutes: RouteRecordRaw[] = [
         }
       }
     ]
-  }, {
-    path: RoutePaths.MOCK_CONFIG,
-    component: () => import('@/layout/index.vue'),
-    name: 'Mock',
-    meta: {
-      title: 'Data Mock',
-      isMenu: true,
-      icon: 'Promotion',
-      hidden: false,
-    },
-    children: [
-      {
-        path: RoutePaths.MOCK_CONFIG_ENV,
-        component: () => import('@/views/mock/config/env/index.vue'),
-        name: 'MockConfigEnv',
-        meta: {
-          title: 'MockConfigEnv',
-          isMenu: true,
-          icon: "monitor",
-          hidden: false,
-        }
-      }, {
-        path: RoutePaths.MOCK_CONFIG_PLATFORM,
-        component: () => import('@/views/mock/config/platform/index.vue'),
-        name: 'MockConfigPlatform',
-        meta: {
-          title: 'MockConfigPlatform',
-          isMenu: true,
-          icon: "monitor",
-          hidden: false,
-        },
-      }, {
-        path: RoutePaths.MOCK_CONFIG_DATASOURCE,
-        component: () => import('@/views/mock/config/datasource/index.vue'),
-        name: 'MockConfigDataSource',
-        meta: {
-          title: 'MockConfigDataSource',
-          isMenu: true,
-          icon: "monitor",
-          hidden: false,
-        },
-      }, {
-        path: RoutePaths.MOCK_CONFIG_RABBITMQ,
-        component: () => import('@/views/mock/config/rabbitmq/index.vue'),
-        name: 'MockConfigRabbitmq',
-        meta: {
-          title: 'MockConfigRabbitmq',
-          isMenu: true,
-          icon: "monitor",
-          hidden: false,
-        },
-      }
-    ]
+  // }, {
+  //   path: RoutePaths.MOCK_CONFIG,
+  //   component: () => import('@/layout/index.vue'),
+  //   name: 'Mock',
+  //   meta: {
+  //     title: 'Data Mock',
+  //     isMenu: true,
+  //     icon: 'Promotion',
+  //     hidden: false,
+  //   },
+  //   children: [
+  //     {
+  //       path: RoutePaths.MOCK_CONFIG_ENV,
+  //       component: () => import('@/views/mock/config/env/index.vue'),
+  //       name: 'MockConfigEnv',
+  //       meta: {
+  //         title: 'MockConfigEnv',
+  //         isMenu: true,
+  //         icon: "monitor",
+  //         hidden: false,
+  //       }
+  //     }, {
+  //       path: RoutePaths.MOCK_CONFIG_PLATFORM,
+  //       component: () => import('@/views/mock/config/platform/index.vue'),
+  //       name: 'MockConfigPlatform',
+  //       meta: {
+  //         title: 'MockConfigPlatform',
+  //         isMenu: true,
+  //         icon: "monitor",
+  //         hidden: false,
+  //       },
+  //     }, {
+  //       path: RoutePaths.MOCK_CONFIG_DATASOURCE,
+  //       component: () => import('@/views/mock/config/datasource/index.vue'),
+  //       name: 'MockConfigDataSource',
+  //       meta: {
+  //         title: 'MockConfigDataSource',
+  //         isMenu: true,
+  //         icon: "monitor",
+  //         hidden: false,
+  //       },
+  //     }, {
+  //       path: RoutePaths.MOCK_CONFIG_RABBITMQ,
+  //       component: () => import('@/views/mock/config/rabbitmq/index.vue'),
+  //       name: 'MockConfigRabbitmq',
+  //       meta: {
+  //         title: 'MockConfigRabbitmq',
+  //         isMenu: true,
+  //         icon: "monitor",
+  //         hidden: false,
+  //       },
+  //     }
+  //   ]
   }, {
     path: RoutePaths.MOCK_CONFIG,
     component: () => import('@/layout/index.vue'),

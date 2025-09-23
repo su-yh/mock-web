@@ -1,11 +1,11 @@
-<script setup lang="ts">
+<!--<script setup lang="ts">-->
 
-</script>
+<!--</script>-->
 
-<template>
-  <h1>Hi: Mock Config Rabbitmq</h1>
-</template>
+<!--<template>-->
+<!--  <h1>Hi: Mock Config Rabbitmq</h1>-->
+<!--</template>-->
 
-<style scoped>
+<!--<style scoped>-->
 
-</style>
+<!--</style>-->
