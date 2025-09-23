@@ -35,7 +35,6 @@
                 <el-option :value="MockModeEnums.NONE" label="NONE" />
                 <el-option :value="MockModeEnums.TIMER_JOB" label="TIMER_JOB" />
                 <el-option :value="MockModeEnums.DATE_RANGE" label="DATE_RANGE" />
-                <el-option :value="MockModeEnums.TS_RANGE" label="TS_RANGE" />
               </el-select>
             </el-form-item>
             <el-form-item label="开始时间：">
@@ -271,6 +270,11 @@
         </el-card>
       </el-tab-pane>
     </el-tabs>
+    <div style="border:  1px solid red; padding: 10px">
+      <div style="margin: 10px"><span>当前状态：</span></div>
+      <el-button type="primary" @click="startEnv">运行</el-button>
+      <el-button type="danger" @click="stopEnv">停止</el-button>
+    </div>
   </el-card>
 </template>
 
@@ -282,7 +286,7 @@ import {listAllReq} from "@/api/mock/config/env";
 import {ResponseBase} from "@/api/base/types";
 import {ElMessage} from "element-plus";
 import {MockModeEnums, MockPropertiesEntity} from "@/api/mock/config/platform/types";
-import {queryPlatformByEnvReq, createReq as createPlatformReq, updateReq as updatePlatformReq} from "@/api/mock/config/platform";
+import {queryPlatformByEnvReq, createReq as createPlatformReq, updateReq as updatePlatformReq, startTaskReq, stopTaskReq} from "@/api/mock/config/platform";
 import {queryDataSourceByEnvReq, createReq as createDataSourceReq, updateReq as updateDataSourceReq} from '@/api/mock/config/datasource'
 import {DataSourceEnums, EnvDatasourcePropertiesEntity} from "@/api/mock/config/datasource/types";
 import {EnvRabbitmqPropertiesEntity} from "@/api/mock/config/rabbitmq/types";
@@ -453,6 +457,22 @@ const saveRabbitMq = async () => {
   }
 
   await reloadRabbitMqEntity();
+}
+
+const startEnv = async () => {
+  const result: ResponseBase = await startTaskReq(envEntity.value.env)
+  if (result.code != 0) {
+    ElMessage({type: 'error', message: result.message})
+    return
+  }
+}
+
+const stopEnv = async () => {
+  const result: ResponseBase = await stopTaskReq(envEntity.value.env)
+  if (result.code != 0) {
+    ElMessage({type: 'error', message: result.message})
+    return
+  }
 }
 
 </script>
