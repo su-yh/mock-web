@@ -9,12 +9,6 @@ const RoutePaths = {
   ACL_USER: routePrefix + '/acl/user',
   ACL_ROLE: routePrefix + '/acl/role',
   ACL_PERMISSION: routePrefix + '/acl/permission',
-  ACL_YAML: routePrefix + '/acl/yaml',
-  PRODUCT: routePrefix + '/product',
-  PRODUCT_TRADEMARK: routePrefix + '/product/trademark',
-  PRODUCT_ATTR: routePrefix + '/product/attr',
-  PRODUCT_SPU: routePrefix + '/product/spu',
-  PRODUCT_SKU: routePrefix + '/product/sku',
   NOT_FOUND: routePrefix + '/404',
   OTHER: routePrefix + '/:pathMatch(.*)*'
 } as const; // 使用as const 让类型更精确
