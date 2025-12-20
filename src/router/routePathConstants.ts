@@ -11,6 +11,7 @@ const RoutePaths = {
   ACL_PERMISSION: routePrefix + '/acl/permission',
   MORTGAGE_MANAGEMENT: routePrefix + '/mortgage',
   MORTGAGE_REPAYMENT: routePrefix + '/repayment',
+  MORTGAGE_STATISTICS: routePrefix + '/statistics',
   MORTGAGE_BASE_POINT: routePrefix + '/base/point',
   NOT_FOUND: routePrefix + '/404',
   OTHER: routePrefix + '/:pathMatch(.*)*'

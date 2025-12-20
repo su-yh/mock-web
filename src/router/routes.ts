@@ -92,6 +92,15 @@ const constantRoutes: RouteRecordRaw[] = [
           icon: "User",
         },
       }, {
+        path: RoutePaths.MORTGAGE_STATISTICS,
+        component: () => import('@/views/mortgage/statistics/index.vue'),
+        name: 'Statistics',
+        meta: {
+          title: '还款统计',
+          hidden: false,
+          icon: "User",
+        },
+      }, {
         path: RoutePaths.MORTGAGE_BASE_POINT,
         component: () => import('@/views/mortgage/bp/index.vue'),
         name: 'BP',
