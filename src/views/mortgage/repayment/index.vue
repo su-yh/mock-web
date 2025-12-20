@@ -12,7 +12,6 @@
         </el-form-item>
       </el-form>
     </el-card>
-<!--    <el-button type="primary" :icon="Plus" @click="createTrademark">添加品牌</el-button>-->
 
     <el-table border style="width: 100%; margin: 10px 0" :data="entitiesPageData.list">
       <el-table-column label="序号" width="80" align="center" type="index"/>
@@ -28,15 +27,36 @@
       <el-table-column label="逾期费用" prop="actualOverdueFee"/>
       <el-table-column label="实际还款总金额" prop="actualTotal"/>
       <el-table-column label="剩余贷款" prop="remainingLoanAmount"/>
-      <el-table-column label="实际LPR" prop="actualLPR"/>
-      <el-table-column label="实际BP" prop="actualBP"/>
+      <el-table-column align="center" label="实际LPR">
+        <template #default="scope">
+          {{ scope.row.actualLPR !== null && scope.row.actualLPR !== undefined && !isNaN(scope.row.actualLPR) ? `${Number(scope.row.actualLPR).toFixed(2)}%` : '-' }}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="实际BP">
+        <template #default="scope">
+          {{ scope.row.actualBP !== null && scope.row.actualBP !== undefined && !isNaN(scope.row.actualBP) ? `${scope.row.actualBP}‱` : '-' }}
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="实际利率">
         <template #default="scope">
           {{ calculateRate(scope.row.actualLPR, scope.row.actualBP) }}
         </template>
       </el-table-column>
-      <el-table-column label="实时LPR" prop="realtimeLPR"/>
-      <el-table-column label="实时BP" prop="realtimeBP"/>
+      <el-table-column align="center" label="实时LPR">
+        <template #default="scope">
+          {{ scope.row.realtimeLPR !== null && scope.row.realtimeLPR !== undefined && !isNaN(scope.row.realtimeLPR) ? `${Number(scope.row.realtimeLPR).toFixed(2)}%` : '-' }}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="实时BP">
+        <template #default="scope">
+          {{ scope.row.realtimeBP !== null && scope.row.realtimeBP !== undefined && !isNaN(scope.row.realtimeBP) ? `${scope.row.realtimeBP}‱` : '-' }}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="实时利率">
+        <template #default="scope">
+          {{ calculateRate(scope.row.realtimeLPR, scope.row.realtimeBP) }}
+        </template>
+      </el-table-column>
       <el-table-column label="备注" prop="remark"/>
       <el-table-column align="center" label="创建时间" show-overflow-tooltip>
         <template #default="scope">
@@ -48,7 +68,7 @@
           {{ formatDate(scope.row.updated) }}
         </template>
       </el-table-column>
-      <el-table-column label="操作" prop="name">
+      <el-table-column label="操作" width="140">
         <template #default="{row, $index}">
           <el-button type="primary" :icon="Edit" @click="updateEntity(row)"/>
           <el-popconfirm title="确定要删除吗？" @confirm="deleteEntity(row.id)">
