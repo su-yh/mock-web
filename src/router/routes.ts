@@ -73,6 +73,36 @@ const constantRoutes: RouteRecordRaw[] = [
       }
     ]
   }, {
+    path: RoutePaths.MORTGAGE_MANAGEMENT,
+    component: () => import('@/layout/index.vue'),
+    name: '房贷管理',
+    meta: {
+      title: '房贷管理',
+      hidden: false,
+      icon: "Lock",
+    },
+    children: [
+      {
+        path: RoutePaths.MORTGAGE_REPAYMENT,
+        component: () => import('@/views/mortgage/repayment/index.vue'),
+        name: 'Repayment',
+        meta: {
+          title: '还款记录',
+          hidden: false,
+          icon: "User",
+        },
+      }, {
+        path: RoutePaths.MORTGAGE_BASE_POINT,
+        component: () => import('@/views/mortgage/bp/index.vue'),
+        name: 'BP',
+        meta: {
+          title: '基点配置',
+          hidden: false,
+          icon: "User",
+        },
+      }
+    ]
+  }, {
     path: RoutePaths.NOT_FOUND,
     component: () => import('@/views/404/index.vue'),
     name: '404',
