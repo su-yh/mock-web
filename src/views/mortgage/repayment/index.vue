@@ -139,6 +139,7 @@
             <el-input v-model="drawerEntity.actualBP" placeholder="请输入实际基点"></el-input>
           </template>
         </el-form-item>
+        <!-- TODO: suyh - 为什么没有实时变化 -->
         <el-form-item label="实际利率(‱)：">
           <template #default>
             <span>{{actualRate}}</span>
@@ -154,9 +155,10 @@
             <el-input v-model="drawerEntity.realtimeBP" placeholder="请输入实时基点"></el-input>
           </template>
         </el-form-item>
+        <!-- TODO: suyh - 为什么没有实时变化 -->
         <el-form-item label="实时利率(‱)：">
           <template #default>
-            <span>{{realtimeRate}}</span>
+            <span>{{calculateRate(drawerEntity.realtimeLPR, drawerEntity.realtimeBP)}}</span>
           </template>
         </el-form-item>
         <el-form-item label="备注：">
