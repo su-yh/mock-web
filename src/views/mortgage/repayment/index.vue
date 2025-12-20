@@ -27,7 +27,7 @@
       <el-table-column label="还款本金" prop="actualPrincipal"/>
       <el-table-column label="还款利息" prop="actualInterest"/>
       <el-table-column label="逾期费用" prop="actualOverdueFee"/>
-      <el-table-column label="实际还款总金额" prop="actualTotal"/>
+      <el-table-column label="还款总金额" prop="actualTotal"/>
       <el-table-column label="剩余贷款" prop="remainingLoanAmount"/>
       <el-table-column align="center" label="实际LPR(%)" prop="actualLPR"/>
       <el-table-column align="center" label="实际BP(‱)" prop="actualBP"/>
