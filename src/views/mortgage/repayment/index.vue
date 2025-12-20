@@ -29,32 +29,16 @@
       <el-table-column label="逾期费用" prop="actualOverdueFee"/>
       <el-table-column label="实际还款总金额" prop="actualTotal"/>
       <el-table-column label="剩余贷款" prop="remainingLoanAmount"/>
-      <el-table-column align="center" label="实际LPR">
-        <template #default="scope">
-          {{ scope.row.actualLPR !== null && scope.row.actualLPR !== undefined && !isNaN(scope.row.actualLPR) ? `${Number(scope.row.actualLPR).toFixed(2)}%` : '-' }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="实际BP">
-        <template #default="scope">
-          {{ scope.row.actualBP !== null && scope.row.actualBP !== undefined && !isNaN(scope.row.actualBP) ? `${scope.row.actualBP}‱` : '-' }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="实际利率">
+      <el-table-column align="center" label="实际LPR(%)" prop="actualLPR"/>
+      <el-table-column align="center" label="实际BP(‱)" prop="actualBP"/>
+      <el-table-column align="center" label="实际利率(%)">
         <template #default="scope">
           {{ calculateRate(scope.row.actualLPR, scope.row.actualBP) }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="实时LPR">
-        <template #default="scope">
-          {{ scope.row.realtimeLPR !== null && scope.row.realtimeLPR !== undefined && !isNaN(scope.row.realtimeLPR) ? `${Number(scope.row.realtimeLPR).toFixed(2)}%` : '-' }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="实时BP">
-        <template #default="scope">
-          {{ scope.row.realtimeBP !== null && scope.row.realtimeBP !== undefined && !isNaN(scope.row.realtimeBP) ? `${scope.row.realtimeBP}‱` : '-' }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="实时利率">
+      <el-table-column align="center" label="实时LPR(%)" prop="realtimeLPR"/>
+      <el-table-column align="center" label="实时BP(‱)" prop="realtimeBP"/>
+      <el-table-column align="center" label="实时利率(%)">
         <template #default="scope">
           {{ calculateRate(scope.row.realtimeLPR, scope.row.realtimeBP) }}
         </template>
@@ -155,6 +139,11 @@
             <el-input v-model="drawerEntity.actualBP" placeholder="请输入实际基点"></el-input>
           </template>
         </el-form-item>
+        <el-form-item label="实际利率(‱)：">
+          <template #default>
+            <span>{{actualRate}}</span>
+          </template>
+        </el-form-item>
         <el-form-item label="实时贷款利率(%)：">
           <template #default>
             <el-input v-model="drawerEntity.realtimeLPR" placeholder="请输入实时贷款利率"></el-input>
@@ -163,6 +152,11 @@
         <el-form-item label="实时基点(‱)：">
           <template #default>
             <el-input v-model="drawerEntity.realtimeBP" placeholder="请输入实时基点"></el-input>
+          </template>
+        </el-form-item>
+        <el-form-item label="实时利率(‱)：">
+          <template #default>
+            <span>{{realtimeRate}}</span>
           </template>
         </el-form-item>
         <el-form-item label="备注：">
@@ -185,7 +179,7 @@
 <script setup lang="ts">
 
 import {Delete, Edit, Plus} from "@element-plus/icons-vue";
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref, Ref, computed} from "vue";
 import {getLoanTypeLabel, MortgageRepaymentDTO, MortgageRepaymentEntity} from "@/api/mortgage/repayment/types";
 import {ListPageParams, ResponseBase} from '@/api/base/types'
 import {PageResult} from "@/api/base/types";
@@ -221,6 +215,18 @@ onMounted(() => {
   listPageMortgage();
 });
 
+const actualRate = computed(() => {
+  let actualLPR: number = drawerEntity.value.actualLPR ? drawerEntity.value.actualLPR : 0;
+  let actualBP: number = drawerEntity.value.actualBP ? drawerEntity.value.actualBP : 0;
+  return calculateRate(actualLPR, actualBP);
+});
+
+const realtimeRate = computed(() => {
+  let realtimeLPR: number = drawerEntity.value.realtimeLPR ? drawerEntity.value.realtimeLPR : 0;
+  let realtimeBP: number = drawerEntity.value.realtimeBP ? drawerEntity.value.realtimeBP : 0;
+  return calculateRate(realtimeLPR, realtimeBP);
+});
+
 const listPageMortgage = async () => {
   const response: ResponseBase<PageResult<MortgageRepaymentEntity>> = await pageListMortgageRepayment(pageParam);
   console.log(`response: ${response}`)
@@ -231,10 +237,6 @@ const listPageMortgage = async () => {
   } else {
     console.log(`response.code = ${response.code}`)
   }
-}
-
-const updateEntity = (entity: MortgageRepaymentEntity) => {
-  console.log(`update entity: ${entity}`)
 }
 
 const deleteEntity = async (id: number) => {
@@ -260,7 +262,16 @@ const formatDate = (date: Date | string | number) => {
 const addEntity = () => {
   drawer.value = true;
   drawerEntityCategory.value = DrawerCategory.CREATE;
-  drawerEntityTitle.value = '添加记录';
+  drawerEntityTitle.value = '添加';
+
+  drawerEntity.value = {}
+}
+const updateEntity = (entity: MortgageRepaymentEntity) => {
+  drawer.value = true;
+  drawerEntityCategory.value = DrawerCategory.UPDATE;
+  drawerEntityTitle.value = '编辑';
+
+  drawerEntity.value = {...entity};
 }
 const cancelCreate = () => {
   drawer.value = false;
