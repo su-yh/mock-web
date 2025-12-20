@@ -190,7 +190,12 @@ import {getLoanTypeLabel, MortgageRepaymentDTO, MortgageRepaymentEntity} from "@
 import {ListPageParams, ResponseBase} from '@/api/base/types'
 import {PageResult} from "@/api/base/types";
 import {ElMessage, UploadProps} from "element-plus";
-import {createMortgageRepayment, pageListMortgageRepayment, updateMortgageRepayment} from "@/api/mortgage/repayment";
+import {
+  createMortgageRepayment,
+  deleteMortgageRepayment,
+  pageListMortgageRepayment,
+  updateMortgageRepayment
+} from "@/api/mortgage/repayment";
 import {calculateRate} from "@/api/base";
 import {SysUserEntity} from "@/api/acl/user/types";
 import {createUser, updateUser} from "@/api/acl/user";
@@ -232,8 +237,9 @@ const updateEntity = (entity: MortgageRepaymentEntity) => {
   console.log(`update entity: ${entity}`)
 }
 
-const deleteEntity = (id: number) => {
-  console.log(`delete entity by id: ${id}`)
+const deleteEntity = async (id: number) => {
+  await deleteMortgageRepayment(id);
+  await listPageMortgage();
 }
 
 const searchPageList = async () => {
