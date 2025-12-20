@@ -2,7 +2,7 @@
 
   <el-card>
 
-    <el-card>
+    <el-card class="search">
       <el-form :inline="true" class="search_form">
         <el-form-item label="用户名：">
           <el-input v-model="nameLike" placeholder="搜索用户名"></el-input>
@@ -12,6 +12,8 @@
         </el-form-item>
       </el-form>
     </el-card>
+
+    <el-button type="primary" @click="addEntity">添加记录</el-button>
 
     <el-table border style="width: 100%; margin: 10px 0" :data="entitiesPageData.list">
       <el-table-column label="序号" width="80" align="center" type="index"/>
@@ -92,7 +94,91 @@
         @current-change="listPageMortgage"
     />
   </el-card>
-
+  <el-drawer v-model="drawer">
+    <template #header>
+      <h4>{{ drawerEntityTitle }}</h4>
+    </template>
+    <template #default>
+      <el-form label-width="180px">
+        <el-form-item label="贷款类型：">
+          <template #default>
+            <el-input v-model="drawerEntity.loanType" placeholder="请输入贷款类型"></el-input>
+          </template>
+        </el-form-item>
+        <el-form-item label="还款期数：">
+          <template #default>
+            <el-input v-model="drawerEntity.repaymentPeriod" placeholder="请输入还款期数"></el-input>
+          </template>
+        </el-form-item>
+        <el-form-item label="还款日期：">
+          <template #default>
+            <el-input v-model="drawerEntity.actualRepaymentDate" placeholder="请输入还款日期"></el-input>
+          </template>
+        </el-form-item>
+        <el-form-item label="还款本金：">
+          <template #default>
+            <el-input v-model="drawerEntity.actualPrincipal" placeholder="请输入还款本金"></el-input>
+          </template>
+        </el-form-item>
+        <el-form-item label="还款利息：">
+          <template #default>
+            <el-input v-model="drawerEntity.actualInterest" placeholder="请输入还款利息"></el-input>
+          </template>
+        </el-form-item>
+        <el-form-item label="逾期费用：">
+          <template #default>
+            <el-input v-model="drawerEntity.actualOverdueFee" placeholder="请输入逾期费用"></el-input>
+          </template>
+        </el-form-item>
+        <el-form-item label="剩余贷款：">
+          <template #default>
+            <el-input v-model="drawerEntity.remainingLoanAmount" placeholder="请输入剩余贷款"></el-input>
+          </template>
+        </el-form-item>
+        <el-form-item label="还款方式：">
+          <template #default>
+            <el-input v-model="drawerEntity.paymentMethod" placeholder="请输入还款方式"></el-input>
+          </template>
+        </el-form-item>
+        <el-form-item label="银行流水号：">
+          <template #default>
+            <el-input v-model="drawerEntity.paymentNo" placeholder="请输入银行流水号"></el-input>
+          </template>
+        </el-form-item>
+        <el-form-item label="实际贷款利率(%)：">
+          <template #default>
+            <el-input v-model="drawerEntity.actualLPR" placeholder="请输入实际贷款利率"></el-input>
+          </template>
+        </el-form-item>
+        <el-form-item label="实际基点(‱)：">
+          <template #default>
+            <el-input v-model="drawerEntity.actualBP" placeholder="请输入实际基点"></el-input>
+          </template>
+        </el-form-item>
+        <el-form-item label="实时贷款利率(%)：">
+          <template #default>
+            <el-input v-model="drawerEntity.realtimeLPR" placeholder="请输入实时贷款利率"></el-input>
+          </template>
+        </el-form-item>
+        <el-form-item label="实时基点(‱)：">
+          <template #default>
+            <el-input v-model="drawerEntity.realtimeBP" placeholder="请输入实时基点"></el-input>
+          </template>
+        </el-form-item>
+        <el-form-item label="备注：">
+          <template #default>
+            <el-input v-model="drawerEntity.remark"></el-input>
+          </template>
+        </el-form-item>
+      </el-form>
+    </template>
+    <template #footer>
+      <div style="flex: auto">
+        <el-button @click="cancelCreate">取消</el-button>
+        <el-button type="primary" @click="saveEntity">保存</el-button>
+      </div>
+    </template>
+  </el-drawer>
 </template>
 
 
@@ -100,14 +186,25 @@
 
 import {Delete, Edit, Plus} from "@element-plus/icons-vue";
 import {onMounted, reactive, ref} from "vue";
-import {getLoanTypeLabel, MortgageRepaymentEntity} from "@/api/mortgage/repayment/types";
+import {getLoanTypeLabel, MortgageRepaymentDTO, MortgageRepaymentEntity} from "@/api/mortgage/repayment/types";
 import {ListPageParams, ResponseBase} from '@/api/base/types'
 import {PageResult} from "@/api/base/types";
 import {ElMessage, UploadProps} from "element-plus";
-import {pageListMortgageRepayment} from "@/api/mortgage/repayment";
+import {createMortgageRepayment, pageListMortgageRepayment, updateMortgageRepayment} from "@/api/mortgage/repayment";
 import {calculateRate} from "@/api/base";
+import {SysUserEntity} from "@/api/acl/user/types";
+import {createUser, updateUser} from "@/api/acl/user";
+
+enum DrawerCategory {
+  CREATE,
+  UPDATE,
+}
 
 let nameLike = ref<string>('');
+let drawer = ref<boolean>(false); // 抽屉
+const drawerEntityCategory = ref<DrawerCategory>(DrawerCategory.CREATE);
+let drawerEntityTitle = ref<string>('');
+let drawerEntity = ref<MortgageRepaymentEntity>({});
 
 let pageParam = reactive<ListPageParams>({
   pageNo: 1, pageSize: 10
@@ -119,7 +216,6 @@ onMounted(() => {
   listPageMortgage();
 });
 
-// 调用查询
 const listPageMortgage = async () => {
   const response: ResponseBase<PageResult<MortgageRepaymentEntity>> = await pageListMortgageRepayment(pageParam);
   console.log(`response: ${response}`)
@@ -155,10 +251,60 @@ const formatDate = (date: Date | string | number) => {
   return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 }
 
+const addEntity = () => {
+  drawer.value = true;
+  drawerEntityCategory.value = DrawerCategory.CREATE;
+  drawerEntityTitle.value = '添加记录';
+}
+const cancelCreate = () => {
+  drawer.value = false;
+}
+const saveEntity = async () => {
 
+  let result: ResponseBase<number> | null = null;
+  let messagePrev = '';
+  switch (drawerEntityCategory.value) {
+    case DrawerCategory.CREATE:
+      result = await createMortgageRepayment(drawerEntity.value);
+      messagePrev = '添加';
+      break
+    case DrawerCategory.UPDATE:
+      console.log("drawerEntity: ", drawerEntity.value)
+      result = await updateMortgageRepayment(drawerEntity.value);
+      messagePrev = '更新';
+      break
+    default:
+      break;
+  }
+  if (result == null) {
+    ElMessage({
+      type: "error",
+      message: 'result is null',
+    })
+    return;
+  }
+  if (result.code != 0) {
+    ElMessage({
+      type: "error",
+      message: result.message,
+    })
+    return;
+  }
+
+  ElMessage({
+    type: "success",
+    message: messagePrev + '成功',
+  })
+
+  await listPageMortgage();
+
+  drawer.value = false;
+}
 </script>
 
 
 <style scoped lang="scss">
-
+.search {
+  margin-bottom: 10px;
+}
 </style>

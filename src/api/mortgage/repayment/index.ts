@@ -4,8 +4,11 @@ import {MortgageRepaymentEntity} from "./types";
 
 enum API {
   MORTGAGE_REPAYMENT_PAGE_LIST_URL = '/mortgage/repayment/page/list',
+  MORTGAGE_REPAYMENT_CREATE_URL = '/mortgage/repayment/create',
+  MORTGAGE_REPAYMENT_UPDATE_URL = '/mortgage/repayment/update',
 }
 
 export const pageListMortgageRepayment = (params: ListPageParams)  => request.get<any, ResponseBase<PageResult<MortgageRepaymentEntity>>>(API.MORTGAGE_REPAYMENT_PAGE_LIST_URL, {params});
-
+export const createMortgageRepayment = (entity: MortgageRepaymentEntity) => request.post<MortgageRepaymentEntity, ResponseBase<number>>(API.MORTGAGE_REPAYMENT_CREATE_URL, entity);
+export const updateMortgageRepayment = (entity: MortgageRepaymentEntity) => request.post<MortgageRepaymentEntity, ResponseBase<number>>(API.MORTGAGE_REPAYMENT_UPDATE_URL, entity);
 
